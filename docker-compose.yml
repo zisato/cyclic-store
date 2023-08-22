@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  nodejs:
+    image: node:19-buster
+    environment:
+      - HTTP_HOST=0.0.0.0
+      - HTTP_PORT=3000
+      - NODE_ENV=development
+      - VUE_APP_BACKEND_URL=http://localhost:3000
+    ports:
+      - 3000:3000
+      - 8080:8080
+    working_dir: /src
+    volumes:
+      - ./:/src
+    command: npm run dev
