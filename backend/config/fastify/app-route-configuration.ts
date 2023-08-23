@@ -3,13 +3,16 @@ import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastif
 import { RouteOptions } from 'fastify';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import StatusController from '../../src/infrastructure/controller/status-controller';
+import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
     const commonRoutesOptions = this.commonRoutesOptions(container);
+    const categoryRoutesOptions = this.categoryRoutesOptions(container);
 
     return [
-      ...commonRoutesOptions
+      ...commonRoutesOptions,
+      ...categoryRoutesOptions
     ];
   }
 
@@ -32,6 +35,20 @@ export class AppRouteConfiguration implements RouteConfiguration {
     return [
       indexRoute,
       statusRoute
+    ];
+  }
+
+  private categoryRoutesOptions(container: Container): RouteOptions[] {
+    const createCategoryController = container.getTyped(CreateCategoryController);
+
+    const createRoute: RouteOptions = {
+      method: 'POST',
+      url: '/admin/categories',
+      handler: createCategoryController.handle.bind(createCategoryController)
+    }
+
+    return [
+      createRoute
     ];
   }
 }

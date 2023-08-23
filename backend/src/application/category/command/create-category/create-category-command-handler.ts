@@ -1,5 +1,6 @@
 import { Category } from '../../../../domain/category/category';
 import { CategoryRepository } from '../../../../domain/category/repository/category-repository';
+import { InvalidArgumentError } from '../../../../domain/error/invalid-argument-error';
 import { CreateCategoryCommand } from './create-category-command';
 
 export default class CreateCategoryCommandHandler {
@@ -15,7 +16,7 @@ export default class CreateCategoryCommandHandler {
 
   async ensureCategoryIdNotExists(id: string): Promise<void> {
     if (await this.categoryRepository.exists(id)) {
-      throw new Error(`Existing Category with id ${id}`);
+      throw new InvalidArgumentError(`Existing Category with id ${id}`);
     }
   }
 }

@@ -72,8 +72,8 @@ export class FastifyFrameworkAdapter implements FrameworkAdapter {
         this.isBooted = true;
       }
     }
-  
-    startServer(port: number, host?: string): Server {
+
+    async startServer(port: number, host?: string): Promise<Server> {
       if (!this.isBooted) {
         throw new Error('Cannot start server without boot first');
       }
@@ -83,21 +83,21 @@ export class FastifyFrameworkAdapter implements FrameworkAdapter {
       }
   
       const fastify = this.getFastify();
-  
-      fastify.listen({ port, host }, (err, address) => {
-        if (err) {
-          return console.error('Error starting server', err);
-        }
 
-        console.log(`Server started at ${address}`);
-      });
-  
+      try {
+        await fastify.listen({ port, host })
+      } catch (error) {
+        console.log('Error starting server', error);
+       
+        throw error;
+      }
+
       this.server = fastify.server;
 
       return this.server;
     }
   
-    shutdown(): void {
+    async shutdown(): Promise<void> {
       if (this.server !== null) {
         this.server.close();
         this.server.closeAllConnections();
