@@ -37,7 +37,7 @@ describe('ListCategoriesController unit test', () => {
 
   test('Should call listCategories.execute method when valid request body', async () => {
     // Given
-    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValue([])
+    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValueOnce([])
 
     // When
     await controller.handle(stubs.request as FastifyRequest, stubs.reply as FastifyReply)
@@ -78,7 +78,7 @@ describe('ListCategoriesController unit test', () => {
 
   test('Should call reply.status method when valid request', async () => {
     // Given
-    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValue([])
+    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValueOnce([])
 
     // When
     await controller.handle(stubs.request as FastifyRequest, stubs.reply as FastifyReply)
@@ -104,7 +104,7 @@ describe('ListCategoriesController unit test', () => {
         }
       }
     ]
-    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValue(categories)
+    stubs.listCategoriesQueryHandler.execute = jest.fn().mockResolvedValueOnce(categories)
     stubs.jsonApiCategoryTransformer.transformArray = jest.fn().mockReturnValueOnce(jsonApiCategories)
 
     // When

@@ -6,4 +6,8 @@ export class Category {
         this.id = id;
         this.name = name;
     }
+
+    changeName(newName: string): Category {
+        return new Category({ ...this, name: newName });
+    }
 }

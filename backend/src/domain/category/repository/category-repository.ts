@@ -5,5 +5,7 @@ export interface CategoryRepository {
 
     find(): Promise<Category[]>
 
+    get(id: string): Promise<Category>
+
     save(category: Category): Promise<void>
 }
