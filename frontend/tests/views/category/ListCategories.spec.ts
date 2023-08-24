@@ -1,11 +1,11 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
 import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
-import ListCategories from '../../src/views/ListCategories.vue'
-import { ApiClientCategoryRepository } from '../../src/repositories/api-client-category-repository'
-import router from '../../src/router/router'
+import ListCategories from '../../../src/views/category/ListCategories.vue'
+import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
+import router from '../../../src/router/router'
 
 describe('ListCategories unit test', () => {
-  vi.mock('../../src/repositories/api-client-category-repository', () => {
+  vi.mock('../../../src/repositories/api-client-category-repository', () => {
     const apiClientCategoryRepository = vi.fn();
     apiClientCategoryRepository.prototype.findAll = vi.fn();
 

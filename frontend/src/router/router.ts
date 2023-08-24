@@ -1,6 +1,6 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
-import CreateCategory from '../views/CreateCategory.vue';
-import ListCategories from '../views/ListCategories.vue';
+import CreateCategory from '../views/category/CreateCategory.vue';
+import ListCategories from '../views/category/ListCategories.vue';
 import Home from '../views/Home.vue';
 import Status from '../views/Status.vue';
 

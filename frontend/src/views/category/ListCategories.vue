@@ -45,8 +45,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Category } from '../models/category'
-import { ApiClientCategoryRepository } from '../repositories/api-client-category-repository'
+import { Category } from '../../models/category'
+import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
 
 const categories = ref<Array<Category>>([])
 

@@ -1,7 +1,7 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
-import CreateCategory from '../../src/views/CreateCategory.vue'
-import { ApiClientCategoryRepository } from '../../src/repositories/api-client-category-repository'
+import CreateCategory from '../../../src/views/category/CreateCategory.vue'
+import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
 
 describe('CreateCategory unit test', () => {
   vi.mock('vue-router', () => {
@@ -15,7 +15,7 @@ describe('CreateCategory unit test', () => {
       useRouter: useRouterStub
     }
   })
-  vi.mock('../../src/repositories/api-client-category-repository', () => {
+  vi.mock('../../../src/repositories/api-client-category-repository', () => {
     const categoryRepository = vi.fn();
     categoryRepository.prototype.create = vi.fn();
 
