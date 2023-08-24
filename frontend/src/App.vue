@@ -1,11 +1,13 @@
 <template>
   <main role="main" class="d-flex flex-column vh-100">
     <div>
-      <router-link to="/">Go to Home</router-link>
+      <router-link :to="{ name: 'home' }">Go to Home</router-link>
       <br />
-      <router-link to="/status">Go to Status</router-link>
+      <router-link :to="{ name: 'status' }">Go to Status</router-link>
       <br />
-      <router-link to="/categories/create">Go to create Category</router-link>
+      <router-link :to="{ name: 'list-categories' }">Go to list categories</router-link>
+      <br />
+      <router-link :to="{ name: 'create-category' }">Go to create Category</router-link>
     </div>
 
     <router-view></router-view>
