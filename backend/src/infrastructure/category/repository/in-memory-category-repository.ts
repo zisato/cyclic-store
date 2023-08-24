@@ -10,6 +10,10 @@ export default class InMemoryCategoryRepository implements CategoryRepository {
         })
     }
 
+    async find(): Promise<Category[]> {
+        return this.data;
+    }
+
     async save(category: Category): Promise<void> {
         this.data.push(category);
     }
