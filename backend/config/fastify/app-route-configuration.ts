@@ -4,6 +4,7 @@ import { RouteOptions } from 'fastify';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
+import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -40,6 +41,13 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
   private categoryRoutesOptions(container: Container): RouteOptions[] {
     const createCategoryController = container.getTyped(CreateCategoryController);
+    const listCategoriesController = container.getTyped(ListCategoriesController);
+
+    const listRoute: RouteOptions = {
+      method: 'GET',
+      url: '/admin/categories',
+      handler: listCategoriesController.handle.bind(listCategoriesController)
+    }
 
     const createRoute: RouteOptions = {
       method: 'POST',
@@ -48,6 +56,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     }
 
     return [
+      listRoute,
       createRoute
     ];
   }
