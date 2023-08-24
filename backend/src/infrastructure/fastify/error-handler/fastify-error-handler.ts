@@ -12,7 +12,7 @@ export default class FastifyErrorHandler {
     >()
   ) {}
 
-  handle: ErrorHandler = async (error: Error, _request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  handle: ErrorHandler = (error: Error, _request: FastifyRequest, reply: FastifyReply): void => {
     const status = this.resolveStatus(error);
     // const payload = { trace: error.stack };
     // this.logger.error({ payload }, error.message);
