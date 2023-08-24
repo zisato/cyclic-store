@@ -44,15 +44,15 @@ export class Kernel {
     }
   }
 
-  startServer(port: number, host?: string): Server {
+  async startServer(port: number, host?: string): Promise<Server> {
     this.boot();
     this.bootFramework();
 
     return this.frameworkAdapter.startServer(port, host);
   }
 
-  shutdown(): void {
-    this.frameworkAdapter.shutdown();
+  async shutdown(): Promise<void> {
+    await this.frameworkAdapter.shutdown();
 
     this.parameters = null;
     if (this.container !== null) {
