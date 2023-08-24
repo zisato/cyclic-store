@@ -12,6 +12,7 @@ type Response<T> = {
 
 enum Method {
   get = 'GET',
+  post = 'POST'
 }
 
 export class ApiClientError extends Error {
@@ -42,6 +43,22 @@ export class ApiClient {
     const response = await this.doRequest<T>({
       method: Method.get,
       url,
+    });
+
+    return {
+      statusCode: response.status,
+      body: response.data,
+    };
+  }
+
+  async post<T extends {}>(
+    url: string,
+    data: {} = {}
+  ): Promise<ApiClientResponse<T>> {
+    const response = await this.doRequest<T>({
+      method: Method.post,
+      url,
+      data,
     });
 
     return {
