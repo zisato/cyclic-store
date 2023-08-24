@@ -22,6 +22,7 @@ import { v1 } from 'uuid'
 import { ApiClientCategoryRepository } from '../repositories/api-client-category-repository'
 
 const category = ref({ name: '' })
+const router = useRouter()
 
 async function submitForm(): Promise<void> {
     const categoryRepository = new ApiClientCategoryRepository()
@@ -33,7 +34,6 @@ async function submitForm(): Promise<void> {
 
     await categoryRepository.create(newCategory)
 
-    const router = useRouter()
-    router.push('/')
+    router.push({ name: 'list-categories' })
 }
 </script>

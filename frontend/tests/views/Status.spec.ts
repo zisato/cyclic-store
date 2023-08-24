@@ -1,5 +1,5 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
 import Status from '../../src/views/Status.vue'
 import { ApiClient } from '../../src/clients/api-client'
 
@@ -15,6 +15,10 @@ describe('Status unit test', () => {
 
   const apiClient = new ApiClient();
 
+  function getAppWrapper(): VueWrapper {
+    return mount(Status)
+  }
+
   it('should display default status text', () => {
     const methodStub = apiClient.get as EnhancedSpy
     methodStub.mockResolvedValueOnce({
@@ -23,7 +27,7 @@ describe('Status unit test', () => {
         status: 'ok'
       }
     })
-    const wrapper = mount(Status)
+    const wrapper = getAppWrapper()
 
     const text = wrapper.find('h4').text()
 
@@ -39,11 +43,11 @@ describe('Status unit test', () => {
         status: 'ok'
       }
     })
-    const wrapper = mount(Status)
+    const wrapper = getAppWrapper()
+
     await flushPromises()
 
     const text = wrapper.find('h4').text()
-
     const msg = 'Status: ok'
     expect(text).toEqual(msg)
   })

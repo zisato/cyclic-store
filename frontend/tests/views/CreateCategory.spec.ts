@@ -1,5 +1,5 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { VueWrapper, mount } from '@vue/test-utils'
 import CreateCategory from '../../src/views/CreateCategory.vue'
 import { ApiClientCategoryRepository } from '../../src/repositories/api-client-category-repository'
 
@@ -24,10 +24,14 @@ describe('CreateCategory unit test', () => {
     }
   })
 
+  function getAppWrapper(): VueWrapper {
+    return mount(CreateCategory)
+  }
+
   const categoryRepository = new ApiClientCategoryRepository();
 
   it('should display header text', () => {
-    const wrapper = mount(CreateCategory)
+    const wrapper = getAppWrapper()
 
     const text = wrapper.find('h4').text()
 
@@ -37,7 +41,7 @@ describe('CreateCategory unit test', () => {
 
   it('should call categoryRepository.create with arguments when submit', () => {
     const methodStub = categoryRepository.create as EnhancedSpy
-    const wrapper = mount(CreateCategory)
+    const wrapper = getAppWrapper()
 
     wrapper.find('input[name="category[name]"]').setValue('create category')
     wrapper.find('form').trigger('submit')
