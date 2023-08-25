@@ -28,6 +28,14 @@ export default class InMemoryCategoryRepository implements CategoryRepository {
     }
 
     async save(category: Category): Promise<void> {
-        this.data.push(category);
+        const existingCategoryIndex = this.data.findIndex((data: Category) => {
+            return category.id === data.id;
+        });
+      
+        if (existingCategoryIndex >= 0) {
+            this.data[existingCategoryIndex] = category;
+        } else {
+            this.data.push(category);
+        }
     }
 }

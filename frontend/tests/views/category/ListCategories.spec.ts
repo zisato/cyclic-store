@@ -2,7 +2,8 @@ import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
 import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
 import ListCategories from '../../../src/views/category/ListCategories.vue'
 import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
-import router from '../../../src/router/router'
+import { Router, createRouter, createWebHistory } from 'vue-router'
+import routes from '../../../src/routes/routes'
 
 describe('ListCategories unit test', () => {
   vi.mock('../../../src/repositories/api-client-category-repository', () => {
@@ -15,6 +16,17 @@ describe('ListCategories unit test', () => {
   })
 
   const categoryRepository = new ApiClientCategoryRepository();
+
+  let router: Router;
+  beforeEach(async () => {
+    router = createRouter({
+      history: createWebHistory(),
+      routes,
+    })
+
+    router.push('/')
+    await router.isReady()
+  });
 
   function getAppWrapper(): VueWrapper {
     return mount(ListCategories, {
