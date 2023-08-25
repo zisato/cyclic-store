@@ -22,7 +22,7 @@
                                 <td>{{category.name}}</td>
                                 <td>
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        
+                                        <router-link class="btn btn-sm btn-primary" :to="{ name: 'update-category', params: { categoryId: category.id } }">Edit</router-link>
                                     </div>
                                 </td>
                             </tr>
@@ -45,8 +45,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Category } from '../models/category'
-import { ApiClientCategoryRepository } from '../repositories/api-client-category-repository'
+import { Category } from '../../models/category'
+import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
 
 const categories = ref<Array<Category>>([])
 

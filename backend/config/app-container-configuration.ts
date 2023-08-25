@@ -9,6 +9,7 @@ import {
 import { ContainerConfiguration } from '../src/shared/kernel/configuration/container-configuration';
 import { Parameters } from '../src/shared/kernel/parameters/parameters';
 import { InvalidArgumentError } from '../src/domain/error/invalid-argument-error';
+import { ModelNotFoundError } from '../src/domain/error/model-not-found-error';
 
 export class AppContainerConfiguration implements ContainerConfiguration {
     configureContainer(container: AwilixContainer, parameters: Parameters): void {
@@ -34,6 +35,7 @@ export class AppContainerConfiguration implements ContainerConfiguration {
             publicPath: asValue(parameters.get<string>('publicPath')),
             errorHandlerMapping: asValue(new Map<string, number>([
                 [InvalidArgumentError.name, 400],
+                [ModelNotFoundError.name, 404]
               ])),
         });
 

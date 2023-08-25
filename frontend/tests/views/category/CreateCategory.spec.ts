@@ -1,21 +1,12 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
-import CreateCategory from '../../src/views/CreateCategory.vue'
-import { ApiClientCategoryRepository } from '../../src/repositories/api-client-category-repository'
+import CreateCategory from '../../../src/views/category/CreateCategory.vue'
+import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
+import { Router, createRouter, createWebHistory } from 'vue-router'
+import routes from '../../../src/routes/routes'
 
 describe('CreateCategory unit test', () => {
-  vi.mock('vue-router', () => {
-    const useRouterStub = vi.fn().mockImplementation(() => {
-      return {
-        push: vi.fn()
-      }
-    })
-
-    return {
-      useRouter: useRouterStub
-    }
-  })
-  vi.mock('../../src/repositories/api-client-category-repository', () => {
+  vi.mock('../../../src/repositories/api-client-category-repository', () => {
     const categoryRepository = vi.fn();
     categoryRepository.prototype.create = vi.fn();
 
@@ -24,8 +15,23 @@ describe('CreateCategory unit test', () => {
     }
   })
 
+  let router: Router;
+  beforeEach(async () => {
+    router = createRouter({
+      history: createWebHistory(),
+      routes,
+    })
+
+    router.push('/')
+    await router.isReady()
+  });
+
   function getAppWrapper(): VueWrapper {
-    return mount(CreateCategory)
+    return mount(CreateCategory, {
+      global: {
+        plugins: [router],
+      }
+    })
   }
 
   const categoryRepository = new ApiClientCategoryRepository();

@@ -5,6 +5,7 @@ import IndexController from '../../src/infrastructure/controller/index-controlle
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
+import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -41,6 +42,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
   private categoryRoutesOptions(container: Container): RouteOptions[] {
     const createCategoryController = container.getTyped(CreateCategoryController);
+    const updateCategoriesController = container.getTyped(UpdateCategoryController);
     const listCategoriesController = container.getTyped(ListCategoriesController);
 
     const listRoute: RouteOptions = {
@@ -55,9 +57,16 @@ export class AppRouteConfiguration implements RouteConfiguration {
       handler: createCategoryController.handle.bind(createCategoryController)
     }
 
+    const updateRoute: RouteOptions = {
+      method: 'PATCH',
+      url: '/admin/categories/:categoryId',
+      handler: updateCategoriesController.handle.bind(updateCategoriesController)
+    }
+
     return [
       listRoute,
-      createRoute
+      createRoute,
+      updateRoute
     ];
   }
 }

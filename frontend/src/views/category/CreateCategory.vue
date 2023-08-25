@@ -19,10 +19,10 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { v1 } from 'uuid'
-import { ApiClientCategoryRepository } from '../repositories/api-client-category-repository'
+import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
 
-const category = ref({ name: '' })
 const router = useRouter()
+const category = ref({ name: '' })
 
 async function submitForm(): Promise<void> {
     const categoryRepository = new ApiClientCategoryRepository()

@@ -30,6 +30,18 @@ export class ApiClientCategoryRepository {
         })
     }
 
+    async update(category: Category): Promise<void> {
+        const url = `/admin/categories/${category.id}`;
+
+        await this.apiClient.patch(url, {
+            data: {
+                attributes: {
+                    name: category.name
+                }
+            }
+        })
+    }
+
     async findAll(): Promise<Category[]> {
         const response = await this.apiClient.get<JsonApiResponse<JsonApiCategoryDto[]>>('/admin/categories')
 
@@ -38,6 +50,14 @@ export class ApiClientCategoryRepository {
                 id: categoryDto.id,
                 name: categoryDto.attributes.name
             }
+        })
+    }
+
+    async findById(id: string): Promise<Category | undefined> {
+        const categories = await this.findAll();
+
+        return categories.find((category: Category) => {
+            return category.id === id;
         })
     }
 }

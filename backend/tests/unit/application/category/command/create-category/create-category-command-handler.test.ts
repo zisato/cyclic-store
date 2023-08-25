@@ -16,7 +16,7 @@ describe('CreateCategoryCommandHandler unit test suite', () => {
         const id = 'category-id'
         const name = 'category-name'
         const command = new CreateCategoryCommand(id, name)
-        stubs.categoryRepository.exists.mockResolvedValue(false)
+        stubs.categoryRepository.exists.mockResolvedValueOnce(false)
 
         await createCategory.execute(command)
 
@@ -30,7 +30,7 @@ describe('CreateCategoryCommandHandler unit test suite', () => {
         const id = 'category-id'
         const name = 'category-name'
         const command = new CreateCategoryCommand(id, name)
-        stubs.categoryRepository.exists.mockResolvedValue(true)
+        stubs.categoryRepository.exists.mockResolvedValueOnce(true)
 
         const promise = createCategory.execute(command)
 
@@ -42,7 +42,7 @@ describe('CreateCategoryCommandHandler unit test suite', () => {
         const id = 'category-id'
         const name = 'category-name'
         const command = new CreateCategoryCommand(id, name)
-        stubs.categoryRepository.exists.mockResolvedValue(false)
+        stubs.categoryRepository.exists.mockResolvedValueOnce(false)
 
         await createCategory.execute(command)
 
