@@ -45,7 +45,8 @@
 				"amatiasq.sort-imports",
 				"ZixuanChen.vitest-explorer",
 				"Vue.volar",
-				"Vue.vscode-typescript-vue-plugin"
+				"Vue.vscode-typescript-vue-plugin",
+				"mhutchie.git-graph"
 			]
 		}
 	}
