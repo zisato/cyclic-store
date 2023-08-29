@@ -1,10 +1,12 @@
 import { Container } from '../../src/shared/kernel/container/container';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
+import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
 import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastify/router-configuration';
 import { RouteOptions } from 'fastify';
+import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/seller-authenticated-handler';
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
 
@@ -12,11 +14,13 @@ export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
     const commonRoutesOptions = this.commonRoutesOptions(container);
     const categoryRoutesOptions = this.categoryRoutesOptions(container);
+    const storeRoutesOptions = this.storeRoutesOptions(container);
     const authRoutesOptions = this.authRoutesOptions(container);
 
     return [
       ...commonRoutesOptions,
       ...categoryRoutesOptions,
+      ...storeRoutesOptions,
       ...authRoutesOptions
     ];
   }
@@ -70,6 +74,24 @@ export class AppRouteConfiguration implements RouteConfiguration {
       listRoute,
       createRoute,
       updateRoute
+    ];
+  }
+
+  private storeRoutesOptions(container: Container): RouteOptions[] {
+    const sellerAuthenticatedHandler = container.getTyped(SellerAuthenticatedHandler);
+    const createStoreController = container.getTyped(CreateStoreController);
+
+    const createRoute: RouteOptions = {
+      method: 'POST',
+      url: '/admin/stores',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
+      handler: createStoreController.handle.bind(createStoreController)
+    }
+
+    return [
+      createRoute,
     ];
   }
 

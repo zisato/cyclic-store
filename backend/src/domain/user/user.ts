@@ -8,4 +8,12 @@ export class User {
         this.providerId = providerId;
         this.roles = roles;
     }
+
+    isSeller(): boolean {
+      return this.roles.includes('seller');
+    }
+
+    isCustomer(): boolean {
+      return this.roles.includes('customer');
+    }
 }

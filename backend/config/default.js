@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  environment: process.env.NODE_ENV,
   publicPath: path.join(
     __dirname,
     '..',
