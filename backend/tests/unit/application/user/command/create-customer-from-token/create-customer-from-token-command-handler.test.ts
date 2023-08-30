@@ -20,6 +20,18 @@ describe('CreateCustomerFromTokenCommandHandler unit test suite', () => {
     }
     const createSeller = new CreateCustomerFromTokenCommandHandler(new ProviderIdFromTokenResolver([stubs.providerIdFromToken]), stubs.userRepository)
 
+    test('Should throw error when empty provider ids from token', async () => {
+        const id = '12345'
+        const token = 'awesome-token'
+        const command = new CreateCustomerFromTokenCommand(id, token)
+        const createSellerWithoutProviderIds = new CreateCustomerFromTokenCommandHandler(new ProviderIdFromTokenResolver(), stubs.userRepository)
+
+        const promise = createSellerWithoutProviderIds.execute(command)
+
+        const expectedError = new ProviderIdFromTokenNotFoundError(`Cannot resolve provider id from token ${token}`)
+        await expect(promise).rejects.toThrowError(expectedError)
+    })
+
     test('Should call providerIdFromToken.resolveProviderId once with arguments', async () => {
         const providerId = 'provider-id';
         const id = '12345'

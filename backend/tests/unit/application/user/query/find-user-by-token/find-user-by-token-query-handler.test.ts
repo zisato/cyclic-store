@@ -18,6 +18,17 @@ describe('FindUserByTokenQueryHandler unit test suite', () => {
     }
     const findUser = new FindUserByTokenQueryHandler(new ProviderIdFromTokenResolver([stubs.providerIdFromToken]), stubs.userRepository)
 
+    test('Should throw error when empty provider ids from token', async () => {
+        const token = 'awesome-token'
+        const query = new FindUserByTokenQuery(token)
+        const findUserWithoutProviderIds = new FindUserByTokenQueryHandler(new ProviderIdFromTokenResolver(), stubs.userRepository)
+
+        const promise = findUserWithoutProviderIds.execute(query)
+
+        const expectedError = new ProviderIdFromTokenNotFoundError(`Cannot resolve provider id from token ${token}`)
+        await expect(promise).rejects.toThrowError(expectedError)
+    })
+
     test('Should call providerIdFromToken.resolveProviderId once with arguments', async () => {
         const token = 'awesome-token'
         const providerId = 'provider-id'

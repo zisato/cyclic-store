@@ -42,4 +42,19 @@ describe('AddSellerRoleCommandHandler unit test suite', () => {
         expect(stubs.userRepository.save).toHaveBeenCalledTimes(expectedTimes)
         expect(stubs.userRepository.save).toHaveBeenCalledWith(expectedArguments)
     })
+
+    test('Should not add when is included', async () => {
+        const id = '12345'
+        const providerId = '54321'
+        const user = new User({ id, providerId, roles: ['seller'] })
+        const command = new AddSellerRoleCommand(id)
+        stubs.userRepository.get.mockResolvedValueOnce(user)
+
+        await createSeller.execute(command)
+
+        const expectedTimes = 1
+        const expectedArguments = new User({ id, providerId, roles: ['seller'] })
+        expect(stubs.userRepository.save).toHaveBeenCalledTimes(expectedTimes)
+        expect(stubs.userRepository.save).toHaveBeenCalledWith(expectedArguments)
+    })
 })
