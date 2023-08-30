@@ -88,6 +88,8 @@ export class AppRouteConfiguration implements RouteConfiguration {
   }
 
   private productRoutesOptions(container: Container): RouteOptions[] {
+    const sellerAuthenticatedHandler = container.getTyped(SellerAuthenticatedHandler);
+
     const createProductController = container.getTyped(CreateProductController);
     const detailProductController = container.getTyped(DetailProductController);
     const listProductsByStoreController = container.getTyped(ListProductsByStoreController);
@@ -96,24 +98,36 @@ export class AppRouteConfiguration implements RouteConfiguration {
     const listByStoreRoute: RouteOptions = {
       method: 'GET',
       url: '/stores/:storeId/products',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
       handler: listProductsByStoreController.handle.bind(listProductsByStoreController)
     }
 
     const detailRoute: RouteOptions = {
       method: 'GET',
       url: '/admin/products/:productId',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
       handler: detailProductController.handle.bind(detailProductController)
     }
 
     const createRoute: RouteOptions = {
       method: 'POST',
       url: '/admin/products',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
       handler: createProductController.handle.bind(createProductController)
     }
 
     const updateRoute: RouteOptions = {
       method: 'PATCH',
       url: '/admin/products/:productId',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
       handler: updateProductController.handle.bind(updateProductController)
     }
 
