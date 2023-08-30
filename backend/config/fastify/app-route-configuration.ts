@@ -11,11 +11,16 @@ import { RouteOptions } from 'fastify';
 import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/seller-authenticated-handler';
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
+import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
+import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
+import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
+import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
     const commonRoutesOptions = this.commonRoutesOptions(container);
     const categoryRoutesOptions = this.categoryRoutesOptions(container);
+    const productRoutesOptions = this.productRoutesOptions(container);
     const storeRoutesOptions = this.storeRoutesOptions(container);
     const userRoutesOptions = this.userRoutesOptions(container);
     const authRoutesOptions = this.authRoutesOptions(container);
@@ -23,6 +28,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     return [
       ...commonRoutesOptions,
       ...categoryRoutesOptions,
+      ...productRoutesOptions,
       ...storeRoutesOptions,
       ...userRoutesOptions,
       ...authRoutesOptions
@@ -76,6 +82,44 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
     return [
       listRoute,
+      createRoute,
+      updateRoute
+    ];
+  }
+
+  private productRoutesOptions(container: Container): RouteOptions[] {
+    const createProductController = container.getTyped(CreateProductController);
+    const detailProductController = container.getTyped(DetailProductController);
+    const listProductsByStoreController = container.getTyped(ListProductsByStoreController);
+    const updateProductController = container.getTyped(UpdateProductController);
+
+    const listByStoreRoute: RouteOptions = {
+      method: 'GET',
+      url: '/stores/:storeId/products',
+      handler: listProductsByStoreController.handle.bind(listProductsByStoreController)
+    }
+
+    const detailRoute: RouteOptions = {
+      method: 'GET',
+      url: '/admin/products/:productId',
+      handler: detailProductController.handle.bind(detailProductController)
+    }
+
+    const createRoute: RouteOptions = {
+      method: 'POST',
+      url: '/admin/products',
+      handler: createProductController.handle.bind(createProductController)
+    }
+
+    const updateRoute: RouteOptions = {
+      method: 'PATCH',
+      url: '/admin/products/:productId',
+      handler: updateProductController.handle.bind(updateProductController)
+    }
+
+    return [
+      listByStoreRoute,
+      detailRoute,
       createRoute,
       updateRoute
     ];

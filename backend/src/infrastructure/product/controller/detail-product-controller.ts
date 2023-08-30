@@ -4,7 +4,7 @@ import { DetailProductQuery } from '../../../application/product/query/detail-pr
 import JsonApiProductTransformer from '../transformer/json-api-product-transformer';
 import DetailProductQueryHandler from '../../../application/product/query/detail-product/detail-product-query-handler';
 
-export default class CreateProductController {
+export default class DetailProductController {
   constructor(
     private readonly detailProductQueryHandler: DetailProductQueryHandler,
     private readonly jsonApiProductTransformer: JsonApiProductTransformer
