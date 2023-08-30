@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import LoginCallbackController from '../../../../../src/infrastructure/user/controller/login-callback-controller';
 import CreateCustomerFromTokenCommandHandler from '../../../../../src/application/user/command/create-customer-from-token/create-customer-from-token-command-handler';
 import FindUserByTokenQueryHandler from '../../../../../src/application/user/query/find-user-by-token/find-user-by-token-query-handler';
 import JsonApiUserTransformer from '../../../../../src/infrastructure/user/transformer/json-api-user-transformer';
+import LoginCallbackController from '../../../../../src/infrastructure/user/controller/login-callback-controller';
 import { User } from '../../../../../src/domain/user/user';
 
 describe('LoginCallbackController unit test', () => {
@@ -60,12 +60,12 @@ describe('LoginCallbackController unit test', () => {
     },
     { // missing data.attributes
       data: {
-        id: 'user-id'
+        id: '12345'
       }
     },
     { // missing data.attributes.token
       data: {
-        id: 'user-id',
+        id: '12345',
         attributes: {}
       }
     }
@@ -109,7 +109,7 @@ describe('LoginCallbackController unit test', () => {
     // invalid token
     {
       data: {
-        id: 'user-id',
+        id: '12345',
         attributes: {
           token: 123
         }
@@ -117,7 +117,7 @@ describe('LoginCallbackController unit test', () => {
     },
     {
       data: {
-        id: 'user-id',
+        id: '12345',
         attributes: {
           token: false
         }
@@ -125,7 +125,7 @@ describe('LoginCallbackController unit test', () => {
     },
     {
       data: {
-        id: 'user-id',
+        id: '12345',
         attributes: {
           token: null
         }
@@ -144,7 +144,7 @@ describe('LoginCallbackController unit test', () => {
 
   test('Should call createCustomerFromTokenCommandHandler.execute times with arguments', async () => {
     // Given
-    const id = 'user-id'
+    const id = '12345'
     const providerId = 'provider-id'
     const token = 'awesome-token'
     const user = new User({ id, providerId, roles: ['customer']})
@@ -163,7 +163,7 @@ describe('LoginCallbackController unit test', () => {
 
     // Then
     const expected = {
-      id: 'user-id',
+      id: '12345',
       token: 'awesome-token'
     }
     expect(stubs.createCustomerFromTokenCommandHandler.execute).toHaveBeenCalledTimes(1)
@@ -172,7 +172,7 @@ describe('LoginCallbackController unit test', () => {
 
   test('Should call findUserByTokenQueryHandler.execute times with arguments', async () => {
     // Given
-    const id = 'user-id'
+    const id = '12345'
     const providerId = 'provider-id'
     const token = 'awesome-token'
     const user = new User({ id, providerId, roles: ['customer']})
@@ -199,7 +199,7 @@ describe('LoginCallbackController unit test', () => {
 
   test('Should call reply.status times with arguments', async () => {
     // Given
-    const id = 'user-id'
+    const id = '12345'
     const providerId = 'provider-id'
     const token = 'awesome-token'
     const user = new User({ id, providerId, roles: ['customer']})
@@ -224,7 +224,7 @@ describe('LoginCallbackController unit test', () => {
 
   test('Should call reply.send times with arguments', async () => {
     // Given
-    const id = 'user-id'
+    const id = '12345'
     const providerId = 'provider-id'
     const token = 'awesome-token'
     const user = new User({ id, providerId, roles: ['customer']})
@@ -244,7 +244,7 @@ describe('LoginCallbackController unit test', () => {
     // Then
     const expectedArguments = {
         data: {
-            id: 'user-id',
+            id: '12345',
             attributes: {
                 roles: ['customer']
             }

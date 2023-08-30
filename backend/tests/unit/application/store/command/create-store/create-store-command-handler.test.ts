@@ -1,10 +1,10 @@
-import CreateStoreCommandHandler from '../../../../../../src/application/store/command/create-store/create-store-command-handler'
 import { CreateStoreCommand } from '../../../../../../src/application/store/command/create-store/create-store-command'
-import { StoreRepository } from '../../../../../../src/domain/store/repository/store-repository'
+import CreateStoreCommandHandler from '../../../../../../src/application/store/command/create-store/create-store-command-handler'
 import { InterfaceMock } from '../../../../../helpers/interface-mock'
-import { UserRepository } from '../../../../../../src/domain/user/repository/user-repository'
-import { User } from '../../../../../../src/domain/user/user'
 import { InvalidArgumentError } from '../../../../../../src/domain/error/invalid-argument-error'
+import { StoreRepository } from '../../../../../../src/domain/store/repository/store-repository'
+import { User } from '../../../../../../src/domain/user/user'
+import { UserRepository } from '../../../../../../src/domain/user/repository/user-repository'
 
 describe('CreateStoreCommandHandler unit test suite', () => {
     const stubs = {
@@ -20,8 +20,8 @@ describe('CreateStoreCommandHandler unit test suite', () => {
     const createStore = new CreateStoreCommandHandler(stubs.storeRepository, stubs.userRepository)
 
     test('Should call userRepository.get once with arguments', async () => {
-        const id = 'store-id'
-        const sellerId = 'seller-id'
+        const id = '12345'
+        const sellerId = '54321'
         const name = 'store-name'
         const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['seller'] })
         stubs.userRepository.get.mockResolvedValueOnce(user)
@@ -31,14 +31,14 @@ describe('CreateStoreCommandHandler unit test suite', () => {
         await createStore.execute(command)
 
         const expectedTimes = 1
-        const expectedArguments = 'seller-id'
+        const expectedArguments = '54321'
         expect(stubs.userRepository.get).toHaveBeenCalledTimes(expectedTimes)
         expect(stubs.userRepository.get).toHaveBeenCalledWith(expectedArguments)
     })
 
     test('Should throw error when user is not seller', async () => {
-        const id = 'store-id'
-        const sellerId = 'seller-id'
+        const id = '12345'
+        const sellerId = '54321'
         const name = 'store-name'
         const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['customer'] })
         stubs.userRepository.get.mockResolvedValueOnce(user)
@@ -51,8 +51,8 @@ describe('CreateStoreCommandHandler unit test suite', () => {
     })
 
     test('Should throw error when user has store', async () => {
-        const id = 'store-id'
-        const sellerId = 'seller-id'
+        const id = '12345'
+        const sellerId = '54321'
         const name = 'store-name'
         const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['seller'] })
         stubs.userRepository.get.mockResolvedValueOnce(user)
@@ -66,8 +66,8 @@ describe('CreateStoreCommandHandler unit test suite', () => {
     })
 
     test('Should throw error when store id exists', async () => {
-        const id = 'store-id'
-        const sellerId = 'seller-id'
+        const id = '12345'
+        const sellerId = '54321'
         const name = 'store-name'
         const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['seller'] })
         stubs.userRepository.get.mockResolvedValueOnce(user)
@@ -82,8 +82,8 @@ describe('CreateStoreCommandHandler unit test suite', () => {
     })
 
     test('Should call storeRepository.save once with arguments', async () => {
-        const id = 'store-id'
-        const sellerId = 'seller-id'
+        const id = '12345'
+        const sellerId = '54321'
         const name = 'store-name'
         const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['seller'] })
         stubs.userRepository.get.mockResolvedValueOnce(user)
@@ -95,8 +95,8 @@ describe('CreateStoreCommandHandler unit test suite', () => {
 
         const expectedTimes = 1
         const expectedArguments = expect.objectContaining({
-            id: 'store-id',
-            sellerId: 'seller-id',
+            id: '12345',
+            sellerId: '54321',
             name: 'store-name'
         })
         expect(stubs.storeRepository.save).toHaveBeenCalledTimes(expectedTimes)
