@@ -8,4 +8,8 @@ export class Product {
         this.name = name;
         this.storeId = storeId;
     }
+
+    changeName(newName: string): Product {
+        return new Product({ ...this, name: newName });
+    }
 }

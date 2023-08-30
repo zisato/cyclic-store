@@ -1,6 +1,6 @@
-import { Category } from "../../../../domain/category/category";
-import { CategoryRepository } from "../../../../domain/category/repository/category-repository";
-import { ListCategoriesQuery } from "./list-categories-query";
+import { Category } from '../../../../domain/category/category';
+import { CategoryRepository } from '../../../../domain/category/repository/category-repository';
+import { ListCategoriesQuery } from './list-categories-query';
 
 export default class ListCategoriesQueryHandler {
     constructor(private readonly categoryRepository: CategoryRepository) {}

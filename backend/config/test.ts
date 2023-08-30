@@ -1,4 +1,4 @@
-import { Lifetime } from "awilix";
+import { Lifetime } from 'awilix';
 
 const path = require('path');
 
