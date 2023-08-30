@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+
 import CreateCategoryCommandHandler from '../../../../../src/application/category/command/create-category/create-category-command-handler';
 import CreateCategoryController from '../../../../../src/infrastructure/category/controller/create-category-controller';
 
@@ -115,7 +116,7 @@ describe('CreateCategoryController unit test', () => {
         }
       }
     }
-  ])('Should throw Error when invalid request parameter value %j', async (requestBody) => {
+  ])('Should throw Error when invalid request body value %j', async (requestBody) => {
     // Given
     stubs.request.body = requestBody
 

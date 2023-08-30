@@ -1,6 +1,8 @@
+import AddSellerRoleController from '../../src/infrastructure/user/controller/add-seller-role-controller';
 import { Container } from '../../src/shared/kernel/container/container';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
 import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
+import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/customer-authenticated-handler';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
@@ -15,12 +17,14 @@ export class AppRouteConfiguration implements RouteConfiguration {
     const commonRoutesOptions = this.commonRoutesOptions(container);
     const categoryRoutesOptions = this.categoryRoutesOptions(container);
     const storeRoutesOptions = this.storeRoutesOptions(container);
+    const userRoutesOptions = this.userRoutesOptions(container);
     const authRoutesOptions = this.authRoutesOptions(container);
 
     return [
       ...commonRoutesOptions,
       ...categoryRoutesOptions,
       ...storeRoutesOptions,
+      ...userRoutesOptions,
       ...authRoutesOptions
     ];
   }
@@ -92,6 +96,24 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
     return [
       createRoute,
+    ];
+  }
+
+  private userRoutesOptions(container: Container): RouteOptions[] {
+    const customerAuthenticatedHandler = container.getTyped(CustomerAuthenticatedHandler);
+    const addSellerRoleController = container.getTyped(AddSellerRoleController);
+
+    const addSellerRoleRoute: RouteOptions = {
+      method: 'POST',
+      url: '/users/:customerId/roles/seller',
+      preHandler: [
+        customerAuthenticatedHandler.handle.bind(customerAuthenticatedHandler)
+      ],
+      handler: addSellerRoleController.handle.bind(addSellerRoleController)
+    }
+
+    return [
+      addSellerRoleRoute
     ];
   }
 

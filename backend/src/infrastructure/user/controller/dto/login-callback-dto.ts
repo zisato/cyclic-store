@@ -2,7 +2,7 @@ import { FastifyRequest } from 'fastify';
 import { RequestSchemaValidator } from '../../../json-schema/request-schema-validator';
 import joi from 'joi';
 
-type LoginCallbackequestBody = {
+type LoginCallbackRequestBody = {
     data: {
       id: string;
       attributes: {
@@ -12,7 +12,7 @@ type LoginCallbackequestBody = {
   };
 
 export class LoginCallbackDto {
-  private readonly validationSchema: joi.ObjectSchema<LoginCallbackequestBody> =
+  private readonly validationSchema: joi.ObjectSchema<LoginCallbackRequestBody> =
     joi.object({
       data: joi.object({
         id: joi.string().required(),
