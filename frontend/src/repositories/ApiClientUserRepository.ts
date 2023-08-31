@@ -39,14 +39,7 @@ export class ApiClientUserRepository {
           };
     }
 
-    async getById(id: string): Promise<User> {
-        const response = await this.apiClient.get<JsonApiResponse<JsonApiUserDto>>(
-            `/users/${id}`
-        );
-
-        return {
-            id: response.body.data.id,
-            roles: response.body.data.attributes.roles,
-        };
+    async addSellerRole(id: string): Promise<void> {
+      await this.apiClient.post(`/users/${id}/roles/seller`)
     }
 }

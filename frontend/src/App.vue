@@ -29,11 +29,20 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Login from './components/Login.vue'
 import { useUserStore } from './store/UserStore'
+import { ApiClientStoreRepository } from './repositories/ApiClientStoreRepository';
+import { v1 } from 'uuid'
 
 const userStore = useUserStore();
 
-function createStore(): void {
+async function createStore(): Promise<void> {
+  userStore.addSellerRole()
 
+  const storeRepository = new ApiClientStoreRepository();
+  const store = {
+    id: v1().toString(),
+    name: 'Store'
+  }
+  await storeRepository.create(store)
 }
 
 function logOut(): void {

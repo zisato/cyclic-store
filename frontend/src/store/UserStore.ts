@@ -37,6 +37,24 @@ export const useUserStore = defineStore({
             const userStorage = new UserStorage();
             userStorage.remove();
         },
+        async addSellerRole(): Promise<void> {
+            if (this.user === null) {
+                return;
+            }
+
+            if (this.user.roles.includes('seller')) {
+                return;
+            }
+            
+            const userRepository = new ApiClientUserRepository()
+
+            await userRepository.addSellerRole(this.user.id);
+
+            this.user.roles.push('seller');
+
+            const userStorage = new UserStorage();
+            userStorage.set(this.user);
+        },
         async fetchByToken(token: string): Promise<void> {
             const userRepository = new ApiClientUserRepository()
 
@@ -48,13 +66,5 @@ export const useUserStore = defineStore({
             const userStorage = new UserStorage();
             userStorage.set(this.user);
         },
-        async fetchById(id: string): Promise<void> {
-            const repository = new ApiClientUserRepository();
-
-            this.user = await repository.getById(id);
-
-            const userStorage = new UserStorage();
-            userStorage.set(this.user);
-        }
     }
 });

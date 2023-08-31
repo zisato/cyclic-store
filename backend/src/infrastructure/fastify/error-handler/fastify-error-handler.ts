@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { ErrorHandler } from '../../../shared/kernel/configuration/fastify/error-handler-configuration';
 
@@ -13,9 +13,9 @@ export default class FastifyErrorHandler {
   ) {}
 
   handle: ErrorHandler = (error: Error, _request: FastifyRequest, reply: FastifyReply): void => {
+    this.logError(error);
+
     const status = this.resolveStatus(error);
-    // const payload = { trace: error.stack };
-    // this.logger.error({ payload }, error.message);
 
     reply.status(status)
     reply.send({ message: error.message });
@@ -30,4 +30,10 @@ export default class FastifyErrorHandler {
 
     return errorCode;
   };
+
+  private logError(error: Error): void {
+    const payload = { trace: error.stack };
+
+    console.error({ payload }, error.message);
+  }
 }
