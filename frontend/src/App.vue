@@ -1,59 +1,27 @@
 <template>
   <main role="main" class="d-flex flex-column vh-100">
-    <div>
-      <Login v-show="!isLogged()" />
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+          <a class="navbar-brand" href="#!">Brand name</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <Navbar />
+          </div>
+        </div>
+      </nav>
+    </header>
 
-      <a v-show="isLogged()" class="nav-link" href="#" @click.prevent="logOut">
-        LogOut
-      </a>
-
-      <a v-show="isLogged() && !isSeller()" class="nav-link" href="#" @click.prevent="createStore">
-        Create store
-      </a>
-
-      <router-link :to="{ name: 'home' }">Go to Home</router-link>
-      <br />
-      <router-link :to="{ name: 'status' }">Go to Status</router-link>
-      <br />
-      <router-link v-show="isSeller()" :to="{ name: 'list-categories' }">Go to list categories</router-link>
-      <br />
-      <router-link v-show="isSeller()" :to="{ name: 'create-category' }">Go to create Category</router-link>
-    </div>
-
-    <router-view></router-view>
+    <router-view class="container"></router-view>
   </main>
 </template>
 
 <script setup lang="ts">
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Login from './components/Login.vue'
-import { useUserStore } from './store/UserStore'
-import { ApiClientStoreRepository } from './repositories/ApiClientStoreRepository';
-import { v1 } from 'uuid'
 
-const userStore = useUserStore();
-
-async function createStore(): Promise<void> {
-  userStore.addSellerRole()
-
-  const storeRepository = new ApiClientStoreRepository();
-  const store = {
-    id: v1().toString(),
-    name: 'Store'
-  }
-  await storeRepository.create(store)
-}
-
-function logOut(): void {
-  userStore.clear()
-}
-
-function isLogged(): boolean {
-  return userStore.user !== null
-}
-
-function isSeller(): boolean {
-  return userStore.isSeller
-}
+import Navbar from './components/Navbar.vue'
 </script>
