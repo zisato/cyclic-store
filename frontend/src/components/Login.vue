@@ -1,37 +1,29 @@
 <template>
-    <a
-          class="nav-link"
-          href="#"
-          @click.prevent="login"
-      >
-          LogIn
+  <a class="nav-link" href="#" @click.prevent="mockLogin">
+    LogIn
   </a>
 </template>
 
 <script setup lang="ts">
-import { ApiClient } from '../clients/api-client';
+import { useUserStore } from '../store/UserStore'
 
 type LoginCallbackReponse = {
-  id: string;
-  attributes: {
-    roles: string[];
-  };
-}
-async function login(): Promise<void> {
-  const id = '54321';
-  const token = '12345';
-  const apiClient = new ApiClient();
-  const response = await apiClient.post<LoginCallbackReponse>('/login/callback', {
-    data: {
-        id,
-        attributes: {
-            token
-        }
-    }
-  });
-
-  const user = response.body;
-  console.log(user);
+  clientId: string
+  credential: string
 }
 
+const userStore = useUserStore();
+
+async function mockLogin(): Promise<void> {
+  const response = {
+    clientId: 'mock-client-id',
+    credential: 'mock-credential'
+  }
+
+  return loginCallback(response)
+}
+
+async function loginCallback(response: LoginCallbackReponse): Promise<void> {
+  await userStore.fetchByToken(response.credential)
+}
 </script>

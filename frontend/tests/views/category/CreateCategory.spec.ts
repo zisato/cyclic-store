@@ -1,8 +1,9 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
-import CreateCategory from '../../../src/views/category/CreateCategory.vue'
-import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
 import { Router, createRouter, createWebHistory } from 'vue-router'
+import { VueWrapper, mount } from '@vue/test-utils'
+
+import { ApiClientCategoryRepository } from '../../../src/repositories/ApiClientCategoryRepository'
+import CreateCategory from '../../../src/views/category/CreateCategory.vue'
 import routes from '../../../src/routes/routes'
 
 describe('CreateCategory unit test', () => {

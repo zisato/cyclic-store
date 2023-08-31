@@ -19,7 +19,7 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { v1 } from 'uuid'
-import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
+import { ApiClientCategoryRepository } from '../../repositories/ApiClientCategoryRepository'
 
 const router = useRouter()
 const category = ref({ name: '' })
@@ -37,3 +37,4 @@ async function submitForm(): Promise<void> {
     router.push({ name: 'list-categories' })
 }
 </script>
+../../repositories/apiClientCategoryRepository
