@@ -35,7 +35,7 @@ let stores = ref<Array<Store>>([])
 
 onMounted(async () => {
     if (!userStore.hasUser) {
-        return router.push({ name: 'login' })
+        return router.push({ name: 'home' })
     }
 
     const storeRepository = new ApiClientStoreRepository()

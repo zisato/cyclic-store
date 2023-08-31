@@ -1,3 +1,4 @@
+import { ModelNotFoundError } from '../../../domain/error/model-not-found-error';
 import { Store } from '../../../domain/store/store';
 import { StoreRepository } from '../../../domain/store/repository/store-repository';
 
@@ -16,10 +17,26 @@ export default class InMemoryStoreRepository implements StoreRepository {
         })
     }
 
+    async findAll(): Promise<Store[]> {
+        return this.data;
+    }
+
     async findBySellerId(sellerId: string): Promise<Store | undefined> {
         return this.data.find((store: Store) => {
             return store.sellerId === sellerId;
         })
+    }
+
+    async get(id: string): Promise<Store> {
+        const store = this.data.find((store: Store) => {
+            return store.id === id;
+        })
+
+        if (!store) {
+            throw new ModelNotFoundError(`Store with id ${id} not found`);
+        }
+
+        return store;
     }
 
     async save(store: Store): Promise<void> {

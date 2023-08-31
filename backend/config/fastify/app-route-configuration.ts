@@ -1,19 +1,22 @@
 import AddSellerRoleController from '../../src/infrastructure/user/controller/add-seller-role-controller';
 import { Container } from '../../src/shared/kernel/container/container';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
+import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
 import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
 import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/customer-authenticated-handler';
+import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
+import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
+import ListProductsController from '../../src/infrastructure/product/controller/list-products-controller';
+import ListStoresController from '../../src/infrastructure/store/controller/list-stores-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
 import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastify/router-configuration';
 import { RouteOptions } from 'fastify';
 import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/seller-authenticated-handler';
 import StatusController from '../../src/infrastructure/controller/status-controller';
+import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
-import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
-import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
-import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
@@ -94,6 +97,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     const detailProductController = container.getTyped(DetailProductController);
     const listProductsByStoreController = container.getTyped(ListProductsByStoreController);
     const updateProductController = container.getTyped(UpdateProductController);
+    const listProductsController = container.getTyped(ListProductsController);
 
     const listByStoreRoute: RouteOptions = {
       method: 'GET',
@@ -104,6 +108,14 @@ export class AppRouteConfiguration implements RouteConfiguration {
       handler: listProductsByStoreController.handle.bind(listProductsByStoreController)
     }
 
+    const listRoute: RouteOptions = {
+      method: 'GET',
+      url: '/admin/products',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
+      handler: listProductsController.handle.bind(listProductsController)
+    }
     const detailRoute: RouteOptions = {
       method: 'GET',
       url: '/admin/products/:productId',
@@ -133,6 +145,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
     return [
       listByStoreRoute,
+      listRoute,
       detailRoute,
       createRoute,
       updateRoute
@@ -140,8 +153,29 @@ export class AppRouteConfiguration implements RouteConfiguration {
   }
 
   private storeRoutesOptions(container: Container): RouteOptions[] {
+    const customerAuthenticatedHandler = container.getTyped(CustomerAuthenticatedHandler);
+    const listStoresController = container.getTyped(ListStoresController);
+    const storeDetailController = container.getTyped(StoreDetailController);
     const sellerAuthenticatedHandler = container.getTyped(SellerAuthenticatedHandler);
     const createStoreController = container.getTyped(CreateStoreController);
+
+    const listRoute: RouteOptions = {
+      method: 'GET',
+      url: '/stores',
+      preHandler: [
+        customerAuthenticatedHandler.handle.bind(customerAuthenticatedHandler)
+      ],
+      handler: listStoresController.handle.bind(listStoresController)
+    }
+
+    const detailRoute: RouteOptions = {
+      method: 'GET',
+      url: '/stores/:storeId',
+      preHandler: [
+        customerAuthenticatedHandler.handle.bind(customerAuthenticatedHandler)
+      ],
+      handler: storeDetailController.handle.bind(storeDetailController)
+    }
 
     const createRoute: RouteOptions = {
       method: 'POST',
@@ -153,6 +187,8 @@ export class AppRouteConfiguration implements RouteConfiguration {
     }
 
     return [
+      listRoute,
+      detailRoute,
       createRoute,
     ];
   }
