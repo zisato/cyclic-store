@@ -5,5 +5,7 @@ export interface StoreRepository {
 
     existsBySellerId(sellerId: string): Promise<boolean>
 
+    findBySellerId(sellerId: string): Promise<Store | undefined>;
+
     save(store: Store): Promise<void>
 }

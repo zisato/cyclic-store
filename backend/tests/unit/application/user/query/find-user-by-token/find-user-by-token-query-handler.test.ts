@@ -18,6 +18,17 @@ describe('FindUserByTokenQueryHandler unit test suite', () => {
     }
     const findUser = new FindUserByTokenQueryHandler(new ProviderIdFromTokenResolver([stubs.providerIdFromToken]), stubs.userRepository)
 
+    test('Should throw error when empty provider ids from token', async () => {
+        const token = 'awesome-token'
+        const query = new FindUserByTokenQuery(token)
+        const findUserWithoutProviderIds = new FindUserByTokenQueryHandler(new ProviderIdFromTokenResolver(), stubs.userRepository)
+
+        const promise = findUserWithoutProviderIds.execute(query)
+
+        const expectedError = new ProviderIdFromTokenNotFoundError(`Cannot resolve provider id from token ${token}`)
+        await expect(promise).rejects.toThrowError(expectedError)
+    })
+
     test('Should call providerIdFromToken.resolveProviderId once with arguments', async () => {
         const token = 'awesome-token'
         const providerId = 'provider-id'
@@ -75,7 +86,7 @@ describe('FindUserByTokenQueryHandler unit test suite', () => {
     test('Should return userRepository.getByProviderId result', async () => {
         const token = 'awesome-token'
         const providerId = 'provider-id'
-        const userId = 'user-id'
+        const userId = '12345'
         const user = new User({ id: userId, providerId, roles: ['customer'] })
         const query = new FindUserByTokenQuery(token)
         stubs.providerIdFromToken.resolveProviderId.mockResolvedValueOnce(providerId)
@@ -84,7 +95,7 @@ describe('FindUserByTokenQueryHandler unit test suite', () => {
         const result = await findUser.execute(query)
 
         const expectedResult = {
-            id: 'user-id',
+            id: '12345',
             providerId: 'provider-id',
             roles: ['customer']
         }

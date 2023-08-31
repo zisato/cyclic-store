@@ -54,12 +54,12 @@ describe('CreateStoreController unit test', () => {
     },
     { // missing data.attributes
       data: {
-        id: 'store-id'
+        id: '12345'
       }
     },
     { // missing data.attributes.name
       data: {
-        id: 'store-id',
+        id: '12345',
         attributes: {}
       }
     }
@@ -103,7 +103,7 @@ describe('CreateStoreController unit test', () => {
     // invalid name
     {
       data: {
-        id: 'store-id',
+        id: '12345',
         attributes: {
           name: 123
         }
@@ -111,7 +111,7 @@ describe('CreateStoreController unit test', () => {
     },
     {
       data: {
-        id: 'store-id',
+        id: '12345',
         attributes: {
           name: false
         }
@@ -119,7 +119,7 @@ describe('CreateStoreController unit test', () => {
     },
     {
       data: {
-        id: 'store-id',
+        id: '12345',
         attributes: {
           name: null
         }
@@ -138,8 +138,8 @@ describe('CreateStoreController unit test', () => {
 
   test('Should call userRequestService.getUser times with arguments', async () => {
     // Given
-    const id = 'store-id'
-    const sellerId = 'seller-id'
+    const id = '12345'
+    const sellerId = '54321'
     const name = 'store-name'
     const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['customer'] })
     stubs.userRequestService.getUser = jest.fn().mockReturnValueOnce(user)
@@ -156,8 +156,8 @@ describe('CreateStoreController unit test', () => {
 
   test('Should call createStoreCommandHandler.execute times with arguments', async () => {
     // Given
-    const id = 'store-id'
-    const sellerId = 'seller-id'
+    const id = '12345'
+    const sellerId = '54321'
     const name = 'store-name'
     const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['customer'] })
     stubs.userRequestService.getUser = jest.fn().mockReturnValueOnce(user)
@@ -168,8 +168,8 @@ describe('CreateStoreController unit test', () => {
 
     // Then
     const expected = {
-      id: 'store-id',
-      sellerId: 'seller-id',
+      id: '12345',
+      sellerId: '54321',
       name: 'store-name'
     }
     expect(stubs.createStoreCommandHandler.execute).toHaveBeenCalledTimes(1)
@@ -178,8 +178,8 @@ describe('CreateStoreController unit test', () => {
 
   test('Should call reply.status times with arguments', async () => {
     // Given
-    const id = 'store-id'
-    const sellerId = 'seller-id'
+    const id = '12345'
+    const sellerId = '54321'
     const name = 'store-name'
     const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['customer'] })
     stubs.userRequestService.getUser = jest.fn().mockReturnValueOnce(user)
@@ -195,8 +195,8 @@ describe('CreateStoreController unit test', () => {
   })
 
   test('Should call reply.send times with arguments', async () => {
-    const id = 'store-id'
-    const sellerId = 'seller-id'
+    const id = '12345'
+    const sellerId = '54321'
     const name = 'store-name'
     const user = new User({ id: sellerId, providerId: 'provider-id', roles: ['customer'] })
     stubs.userRequestService.getUser = jest.fn().mockReturnValueOnce(user)

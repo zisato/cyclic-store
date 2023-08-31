@@ -29,7 +29,7 @@ describe('SellerAuthenticatedHandler unit test', () => {
   });
 
   test('Should throw error when request user is not seller', async () => {
-    stubs.request.user = new User({ id: 'user-id', providerId: 'provider-id', roles: ['seller'] })
+    stubs.request.user = new User({ id: '12345', providerId: '54321', roles: ['customer'] })
 
     const promise = preHandler.handle(stubs.request, stubs.reply)
 

@@ -38,14 +38,14 @@ describe('PopulateRequestUserProperty unit test', () => {
     });
   
     test('When authorization header, should add user property to request', async () => {
-        const user = new User({ id: 'user-id', providerId: 'provider-id', roles: ['customer'] })
+        const user = new User({ id: '12345', providerId: 'provider-id', roles: ['customer'] })
         stubs.findUserByTokenQueryHandler.execute = jest.fn().mockResolvedValueOnce(user)
         stubs.request.headers.authorization = 'Bearer awesome-token'
 
         await hookHandler.callback(stubs.request as FastifyRequest)
 
         const expectedUser = new User({
-            id: 'user-id',
+            id: '12345',
             providerId: 'provider-id',
             roles: ['customer']
         })

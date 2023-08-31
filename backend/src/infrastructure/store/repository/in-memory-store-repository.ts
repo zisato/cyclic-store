@@ -16,6 +16,12 @@ export default class InMemoryStoreRepository implements StoreRepository {
         })
     }
 
+    async findBySellerId(sellerId: string): Promise<Store | undefined> {
+        return this.data.find((store: Store) => {
+            return store.sellerId === sellerId;
+        })
+    }
+
     async save(store: Store): Promise<void> {
         const existingStoreIndex = this.data.findIndex((data: Store) => {
             return store.id === data.id;

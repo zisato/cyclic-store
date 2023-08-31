@@ -21,11 +21,11 @@ describe('UserRequestService unit test', () => {
   });
 
   test('Should return request user property', async () => {
-    stubs.request.user = new User({ id: 'user-id', providerId: 'provider-id', roles: ['seller'] })
+    stubs.request.user = new User({ id: '12345', providerId: 'provider-id', roles: ['seller'] })
 
     const result = service.getUser(stubs.request)
 
-    const expectedResult = new User({ id: 'user-id', providerId: 'provider-id', roles: ['seller'] })
+    const expectedResult = new User({ id: '12345', providerId: 'provider-id', roles: ['seller'] })
     expect(result).toEqual(expectedResult)
   });
 })
