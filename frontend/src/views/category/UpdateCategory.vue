@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
-import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
+import { ApiClientCategoryRepository } from '../../repositories/ApiClientCategoryRepository'
 
 const router = useRouter()
 const category = ref({ name: '' })
@@ -45,3 +45,4 @@ async function submitForm(): Promise<void> {
     router.push({ name: 'list-categories' })
 }
 </script>
+../../repositories/apiClientCategoryRepository

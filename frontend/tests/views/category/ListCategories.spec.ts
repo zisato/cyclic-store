@@ -1,8 +1,9 @@
 import { EnhancedSpy, describe, expect, it, vi } from 'vitest'
-import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
-import ListCategories from '../../../src/views/category/ListCategories.vue'
-import { ApiClientCategoryRepository } from '../../../src/repositories/api-client-category-repository'
 import { Router, createRouter, createWebHistory } from 'vue-router'
+import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
+
+import { ApiClientCategoryRepository } from '../../../src/repositories/ApiClientCategoryRepository'
+import ListCategories from '../../../src/views/category/ListCategories.vue'
 import routes from '../../../src/routes/routes'
 
 describe('ListCategories unit test', () => {

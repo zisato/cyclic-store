@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Category } from '../../models/category'
-import { ApiClientCategoryRepository } from '../../repositories/api-client-category-repository'
+import { ApiClientCategoryRepository } from '../../repositories/ApiClientCategoryRepository'
 
 const categories = ref<Array<Category>>([])
 
@@ -55,3 +55,4 @@ onMounted(async () => {
     categories.value = await categoryRepository.findAll()
 })
 </script>
+../../repositories/apiClientCategoryRepository
