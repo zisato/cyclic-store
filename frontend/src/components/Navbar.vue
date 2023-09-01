@@ -51,7 +51,11 @@ async function createStore(): Promise<void> {
   }
   await storeRepository.create(store)
 
-  router.push({ name: 'home' })
+  if (router.currentRoute.value.name === 'home') {
+    router.go(0)
+  } else {
+    router.push({ name: 'home' })
+  }
 }
 
 function logOut(): void {

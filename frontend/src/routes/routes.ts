@@ -9,6 +9,7 @@ import { RouteRecordRaw } from 'vue-router';
 import Status from '../views/Status.vue';
 import Stores from '../views/Stores.vue';
 import UpdateCategory from '../views/category/UpdateCategory.vue';
+import UpdateProduct from '../views/product/UpdateProduct.vue';
 
 const routes: RouteRecordRaw[] = [
     { path: '/', component: Home, name: 'home' },
@@ -19,6 +20,8 @@ const routes: RouteRecordRaw[] = [
     
     { path: '/admin/products', component: ListSellerProducts, name: 'list-seller-products' },
     { path: '/admin/products/create', component: CreateProduct, name: 'create-product' },
+    { path: '/admin/products/:productId/update', component: UpdateProduct, name: 'update-product' },
+
     { path: '/categories', component: ListCategories, name: 'list-categories' },
     { path: '/categories/create', component: CreateCategory, name: 'create-category' },
     { path: '/categories/:categoryId/update', component: UpdateCategory, name: 'update-category' },

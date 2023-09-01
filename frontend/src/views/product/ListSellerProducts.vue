@@ -21,7 +21,8 @@
                             <td>{{product.name}}</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-
+                                    <router-link class="btn btn-sm btn-primary"
+                                        :to="{ name: 'update-product', params: { productId: product.id } }">Edit</router-link>
                                 </div>
                             </td>
                         </tbody>

@@ -19,6 +19,25 @@ export class ApiClientProductRepository {
         this.apiClient = new ApiClient()
     }
 
+    async getById(productId: string): Promise<Product> {
+        const response = await this.apiClient.get<JsonApiResponse<JsonApiProductDto>>(`/admin/products/${productId}`)
+
+        return {
+            id: response.body.data.id,
+            name: response.body.data.attributes.name
+        }
+    }
+
+    async update(product: Product): Promise<void> {
+        await this.apiClient.patch(`/admin/products/${product.id}`, {
+            data: {
+                attributes: {
+                    name: product.name,
+                },
+            },
+        });
+    }
+
     async findByCurrentUser(): Promise<Product[]> {
         const response = await this.apiClient.get<JsonApiResponse<JsonApiProductDto[]>>('/admin/products')
 

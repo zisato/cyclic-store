@@ -5,6 +5,9 @@
         </div>
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <div class="col mb-5" v-show="emptyProducts()">
+                    <h5 class="fw-bolder">Empty products</h5>
+                </div>
                 <div class="col mb-5" v-for="product in products">
                     <div class="card h-100">
                         <!-- Product image-->
@@ -40,6 +43,9 @@ import { ApiClientStoreRepository } from '../repositories/ApiClientStoreReposito
 const store = ref({ name: '' })
 const products = ref<Array<Product>>([])
 
+function emptyProducts(): boolean {
+    return products.value.length === 0;
+}
 
 onMounted(async () => {
     const router = useRouter()
