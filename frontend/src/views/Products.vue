@@ -20,12 +20,12 @@
                             </div>
                         </div>
                         <!-- Product actions-->
-                        <!-- <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center">
                                 <button class="btn btn-outline-dark mt-auto" v-on:click="addItemToCart(product)">Add to
                                     cart</button>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,12 +39,23 @@ import { onMounted, ref } from 'vue'
 import { Product } from '../models/Product'
 import { ApiClientProductRepository } from '../repositories/ApiClientProductRepository'
 import { ApiClientStoreRepository } from '../repositories/ApiClientStoreRepository'
+import { useCartStore } from '../store/CartStore'
 
 const store = ref({ name: '' })
 const products = ref<Array<Product>>([])
 
 function emptyProducts(): boolean {
     return products.value.length === 0;
+}
+
+function addItemToCart(product: Product): void {
+    const cartStore = useCartStore()
+
+    cartStore.addItem({
+        productId: product.id,
+        quantity: 1,
+        name: product.name
+    })
 }
 
 onMounted(async () => {

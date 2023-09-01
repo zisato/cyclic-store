@@ -14,7 +14,6 @@ type LoginCallbackReponse = {
 }
 
 const router = useRouter()
-const userStore = useUserStore();
 
 async function mockLogin(): Promise<void> {
   const response = {
@@ -26,6 +25,8 @@ async function mockLogin(): Promise<void> {
 }
 
 async function loginCallback(response: LoginCallbackReponse): Promise<void> {
+  const userStore = useUserStore();
+
   await userStore.fetchByToken(response.credential)
 
   router.push({ name: 'home' })
