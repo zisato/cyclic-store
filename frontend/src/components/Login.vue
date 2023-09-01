@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { useUserStore } from '../store/UserStore'
 
 type LoginCallbackReponse = {
@@ -12,6 +13,7 @@ type LoginCallbackReponse = {
   credential: string
 }
 
+const router = useRouter()
 const userStore = useUserStore();
 
 async function mockLogin(): Promise<void> {
@@ -25,5 +27,7 @@ async function mockLogin(): Promise<void> {
 
 async function loginCallback(response: LoginCallbackReponse): Promise<void> {
   await userStore.fetchByToken(response.credential)
+
+  router.push({ name: 'home' })
 }
 </script>

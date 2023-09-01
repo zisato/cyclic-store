@@ -25,7 +25,7 @@
                 </li>
 
                 <li v-show="isLogged() && isSeller()">
-                    <router-link class="dropdown-item" :to="{ name: 'list-categories' }">Go to list categories</router-link>
+                    <router-link class="dropdown-item" :to="{ name: 'list-seller-products' }">List products</router-link>
                 </li>
             </ul>
         </li>
@@ -36,8 +36,10 @@
 import { useUserStore } from '../store/UserStore'
 import { ApiClientStoreRepository } from '../repositories/ApiClientStoreRepository';
 import { v1 } from 'uuid'
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
+const router = useRouter();
 
 async function createStore(): Promise<void> {
   userStore.addSellerRole()
@@ -48,6 +50,12 @@ async function createStore(): Promise<void> {
     name: 'Store'
   }
   await storeRepository.create(store)
+
+  if (router.currentRoute.value.name === 'home') {
+    router.go(0)
+  } else {
+    router.push({ name: 'home' })
+  }
 }
 
 function logOut(): void {

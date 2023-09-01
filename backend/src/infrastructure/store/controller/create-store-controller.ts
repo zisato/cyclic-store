@@ -13,12 +13,12 @@ export default class CreateStoreController {
 
   handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const user = this.userRequestService.getUser(request);
-    const createCategoryDto = new CreateStoreDto(request);
+    const createStoreDto = new CreateStoreDto(request);
 
     const command = new CreateStoreCommand(
-      createCategoryDto.requestBody.data.id,
+      createStoreDto.requestBody.data.id,
       user.id,
-      createCategoryDto.requestBody.data.attributes.name
+      createStoreDto.requestBody.data.attributes.name
     );
     await this.createStoreCommandHandler.execute(command);
 
