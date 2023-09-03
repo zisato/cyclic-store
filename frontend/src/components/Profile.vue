@@ -31,6 +31,10 @@ function isLogged(): boolean {
 function logOut(): void {
   userStore.clear()
 
-  router.push({ name: 'home' })
+  if (router.currentRoute.value.name === 'home') {
+    router.go(0)
+  } else {
+    router.push({ name: 'home' })
+  }
 }
 </script>

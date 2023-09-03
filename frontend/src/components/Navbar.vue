@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '../store/UserStore'
+import { useUserStore } from '../store/UserStore';
+import { UniqueNameGenerator } from '../services/UniqueNameGenerator';
 import { ApiClientStoreRepository } from '../repositories/ApiClientStoreRepository';
 import { v1 } from 'uuid'
 import { useRouter } from 'vue-router';
@@ -43,7 +44,7 @@ async function createStore(): Promise<void> {
   const storeRepository = new ApiClientStoreRepository();
   const store = {
     id: storeId,
-    name: 'Store'
+    name: UniqueNameGenerator.generateName()
   }
   await storeRepository.create(store)
   userStore.addStoreId(storeId)
