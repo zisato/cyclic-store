@@ -1,6 +1,6 @@
 import { Cart, CartItem } from '../models/Cart';
 
-import { CartStorage } from '../storage/CartStorage';
+import { CartLocalStorage } from '../storage/CartLocalStorage';
 import { defineStore } from 'pinia';
 
 interface State {
@@ -8,8 +8,7 @@ interface State {
 }
 
 const getCart = (): Cart => {
-  const cartStorage = new CartStorage();
-  const cart = cartStorage.get();
+  const cart = CartLocalStorage.get();
   if (cart === null) {
     return { items: [] };
   }
@@ -24,12 +23,11 @@ export const useCartStore = defineStore({
   }),
   actions: {
     clear(): void {
-      const cartStorage = new CartStorage();
-      cartStorage.remove();
+      CartLocalStorage.remove();
 
       this.cart = { items: [] }
     },
-    async addItem(cartItem: CartItem): Promise<void> {
+    addItem(cartItem: CartItem): void {
       const existingItemIndex = this.cart.items.findIndex((i) =>
         i.productId === cartItem.productId
       );
@@ -43,20 +41,48 @@ export const useCartStore = defineStore({
         this.cart.items.push(cartItem);
       }
 
-      const cartStorage = new CartStorage();
-      cartStorage.set(this.cart);
+      CartLocalStorage.set(this.cart);
     },
-    async removeItem(productId: string): Promise<void> {
+    removeItem(productId: string): void {
       const existingItemIndex = this.cart.items.findIndex((i) =>
         i.productId === productId
       );
-  
+
       if (existingItemIndex > -1) {
         this.cart.items.splice(existingItemIndex, 1);
       }
 
-      const cartStorage = new CartStorage();
-      cartStorage.set(this.cart);
+      CartLocalStorage.set(this.cart);
     },
+    addQuantity(productId: string): void {
+      const existingItemIndex = this.cart.items.findIndex((i) =>
+        i.productId === productId
+      );
+
+      if (existingItemIndex > -1) {
+        const existingItem = this.cart.items[existingItemIndex];
+        const newQuantity = existingItem.quantity + 1;
+
+        this.cart.items[existingItemIndex] = { ...existingItem, quantity: newQuantity };
+
+        CartLocalStorage.set(this.cart);
+      }
+    },
+    removeQuantity(productId: string): void {
+      const existingItemIndex = this.cart.items.findIndex((i) =>
+        i.productId === productId
+      );
+
+      if (existingItemIndex > -1) {
+        const existingItem = this.cart.items[existingItemIndex];
+        const newQuantity = existingItem.quantity - 1;
+
+        if (newQuantity > 0) {
+          this.cart.items[existingItemIndex] = { ...existingItem, quantity: newQuantity };
+
+          CartLocalStorage.set(this.cart);
+        }
+      }
+    }
   },
 });
