@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
-import { TokenStorage } from '../storage/TokenStorage';
+import { TokenLocalStorage } from '../storage/TokenLocalStorage';
 
 type ApiClientResponse<T extends {} = {}> = {
   statusCode: number;
@@ -26,7 +26,6 @@ export class ApiClientError extends Error {
 
 export class ApiClient {
   private readonly http: AxiosInstance;
-  private readonly tokenStorage: TokenStorage;
 
   constructor() {
     this.http = axios.create({ baseURL: process.env.VUE_APP_BACKEND_URL });
@@ -41,8 +40,6 @@ export class ApiClient {
         throw new ApiClientError(statusCode, errorMessage);
       }
     );
-
-    this.tokenStorage = new TokenStorage();
   }
 
   async get<T extends {}>(url: string): Promise<ApiClientResponse<T>> {
@@ -113,7 +110,7 @@ export class ApiClient {
   }
 
   private authorizationHeader(): string | undefined {
-    const token = this.tokenStorage.get();
+    const token = TokenLocalStorage.get();
 
     if (token === null) {
       return undefined;

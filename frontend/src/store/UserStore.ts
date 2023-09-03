@@ -1,7 +1,7 @@
 import { ApiClientUserRepository } from '../repositories/ApiClientUserRepository';
-import { TokenStorage } from '../storage/TokenStorage'
+import { TokenLocalStorage } from '../storage/TokenLocalStorage';
 import { User } from '../models/User';
-import { UserStorage } from '../storage/UserStorage';
+import { UserLocalStorage } from '../storage/UserLocalStorage';
 import { defineStore } from 'pinia';
 
 interface State {
@@ -9,9 +9,7 @@ interface State {
 }
 
 const getUser = (): User | null => {
-    const userStorage = new UserStorage();
-
-    return userStorage.get();
+    return UserLocalStorage.get();
 };
 
 export const useUserStore = defineStore({
@@ -31,11 +29,9 @@ export const useUserStore = defineStore({
         clear(): void {
             this.user = null;
 
-            const tokenStorage = new TokenStorage();
-            tokenStorage.remove();
+            TokenLocalStorage.remove();
 
-            const userStorage = new UserStorage();
-            userStorage.remove();
+            UserLocalStorage.remove();
         },
         async addSellerRole(): Promise<void> {
             if (this.user === null) {
@@ -52,19 +48,16 @@ export const useUserStore = defineStore({
 
             this.user.roles.push('seller');
 
-            const userStorage = new UserStorage();
-            userStorage.set(this.user);
+            UserLocalStorage.set(this.user);
         },
         async fetchByToken(token: string): Promise<void> {
             const userRepository = new ApiClientUserRepository()
 
             this.user = await userRepository.getByToken(token)
 
-            const tokenStorage = new TokenStorage();
-            tokenStorage.set({ token, id: this.user.id, roles: this.user.roles })
+            TokenLocalStorage.set({ token, id: this.user.id, roles: this.user.roles })
 
-            const userStorage = new UserStorage();
-            userStorage.set(this.user);
+            UserLocalStorage.set(this.user);
         },
     }
 });
