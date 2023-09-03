@@ -1,11 +1,17 @@
 <template>
-  <a class="nav-link" href="#" @click.prevent="mockLogin">
-    LogIn
-  </a>
+  <div class="col-3">
+    <div class="input-group">
+      <input class="form-control" type="text" v-model="mockedToken" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" @click.prevent="mockLogin">Login</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { ref } from 'vue'
 import { useUserStore } from '../store/UserStore'
 
 type LoginCallbackReponse = {
@@ -13,12 +19,13 @@ type LoginCallbackReponse = {
   credential: string
 }
 
+const mockedToken = ref<string>('mock-credential')
 const router = useRouter()
 
 async function mockLogin(): Promise<void> {
   const response = {
     clientId: 'mock-client-id',
-    credential: 'mock-credential'
+    credential: mockedToken.value
   }
 
   return loginCallback(response)
