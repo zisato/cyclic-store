@@ -61,7 +61,7 @@ describe('Navbar unit test', () => {
 
     it('when logged should display logout and my store dropdown', () => {
         const userStore = useUserStore()
-        userStore.user = { id: '', roles: [] }
+        userStore.user = { id: '', roles: [], storeId: '' }
         const wrapper = getAppWrapper()
 
         const items = wrapper.findAll('li.nav-item')
@@ -72,7 +72,7 @@ describe('Navbar unit test', () => {
 
     it('when logged and seller role should display list products in dropdown', () => {
         const userStore = useUserStore()
-        userStore.user = { id: '', roles: ['seller'] }
+        userStore.user = { id: '', roles: ['seller'], storeId: '' }
         const wrapper = getAppWrapper()
 
         const dropdown = wrapper.findAll('li.nav-item').at(3)
@@ -83,7 +83,7 @@ describe('Navbar unit test', () => {
 
     it('when logged and not seller role should display create store in dropdown', () => {
         const userStore = useUserStore()
-        userStore.user = { id: '', roles: ['customer'] }
+        userStore.user = { id: '', roles: ['customer'], storeId: '' }
         const wrapper = getAppWrapper()
 
         const dropdown = wrapper.findAll('li.nav-item').at(3)

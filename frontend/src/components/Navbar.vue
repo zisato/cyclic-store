@@ -39,12 +39,14 @@ const router = useRouter();
 async function createStore(): Promise<void> {
   userStore.addSellerRole()
 
+  const storeId = v1().toString()
   const storeRepository = new ApiClientStoreRepository();
   const store = {
-    id: v1().toString(),
+    id: storeId,
     name: 'Store'
   }
   await storeRepository.create(store)
+  userStore.addStoreId(storeId)
 
   if (router.currentRoute.value.name === 'home') {
     router.go(0)
