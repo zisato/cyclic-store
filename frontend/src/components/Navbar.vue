@@ -26,6 +26,7 @@
 
                 <li v-show="isLogged() && isSeller()">
                     <router-link class="dropdown-item" :to="{ name: 'list-seller-products' }">List products</router-link>
+                    <router-link class="dropdown-item" :to="{ name: 'list-seller-orders' }">List orders</router-link>
                 </li>
             </ul>
         </li>

@@ -105,7 +105,7 @@ function removeItemFromCart(productId: string): void {
 }
 
 async function checkoutCart(): Promise<void> {
-    cartStore.clear()
+    cartStore.checkout()
 }
 
 function cartHasItems(): boolean {
