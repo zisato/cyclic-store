@@ -29,4 +29,10 @@ export class Order {
             items
         })
     }
+
+    complete(): Order {
+        const newStatus = OrderStatus.completed;
+    
+        return new Order({ ...this, status: newStatus });
+      }
 }

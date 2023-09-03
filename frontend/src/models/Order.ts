@@ -4,6 +4,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  readonly id: string;
   readonly status: string;
   readonly items: OrderItem[];
 }

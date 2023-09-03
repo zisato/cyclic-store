@@ -26,6 +26,7 @@ export const useCartStore = defineStore({
     async checkout(): Promise<void> {
       const orderRepository = new ApiClientOrderRepository();
       const order = {
+        id: '',
         status: 'pending',
         items: this.cart.items.map((cartItem) => {
           return {

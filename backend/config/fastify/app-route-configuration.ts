@@ -20,6 +20,7 @@ import StatusController from '../../src/infrastructure/controller/status-control
 import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
+import CompleteOrderController from '../../src/infrastructure/order/controller/complete-order-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -100,6 +101,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
     const createOrderController = container.getTyped(CreateOrderController)
     const listOrdersBySellerController = container.getTyped(ListOrdersBySellerController)
+    const completeOrderController = container.getTyped(CompleteOrderController)
 
     const createRoute: RouteOptions = {
       method: 'POST',
@@ -119,8 +121,18 @@ export class AppRouteConfiguration implements RouteConfiguration {
       handler: listOrdersBySellerController.handle.bind(listOrdersBySellerController)
     }
 
+    const completeRoute: RouteOptions = {
+      method: 'POST',
+      url: '/admin/orders/:orderId/complete',
+      preHandler: [
+        sellerAuthenticatedHandler.handle.bind(sellerAuthenticatedHandler)
+      ],
+      handler: completeOrderController.handle.bind(completeOrderController)
+    }
+
     return [
       createRoute,
+      completeRoute,
       listBySellerRoute
     ]
   }

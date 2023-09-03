@@ -35,6 +35,10 @@ export class ApiClientOrderRepository {
     });
   }
 
+  async complete(orderId: string): Promise<void> {
+    await this.apiClient.post(`/admin/orders/${orderId}/complete`);
+  }
+
   async findByCurrentUser(): Promise<Order[]> {
     const response = await this.apiClient.get<JsonApiResponse<JsonApiOrderDto[]>>('/admin/orders')
 

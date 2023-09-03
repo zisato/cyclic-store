@@ -1,3 +1,4 @@
+import { ModelNotFoundError } from '../../../domain/error/model-not-found-error';
 import { Order } from '../../../domain/order/order';
 import { OrderRepository } from '../../../domain/order/repository/order-repository';
 
@@ -8,6 +9,18 @@ export default class InMemoryOrderRepository implements OrderRepository {
         return this.data.filter((order: Order) => {
             return order.storeId === storeId;
         });
+    }
+
+    async get(id: string): Promise<Order> {
+        const existingOrderIndex = this.data.findIndex((order: Order) => {
+            return order.id === id;
+        });
+      
+        if (existingOrderIndex === -1) {
+            throw new ModelNotFoundError(`Order with id ${id} not found`);
+        }
+      
+        return this.data[existingOrderIndex];
     }
 
     async save(order: Order): Promise<void> {

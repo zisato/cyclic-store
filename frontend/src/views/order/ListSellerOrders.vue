@@ -16,6 +16,7 @@
                             <td>{{order.status}}</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button class="btn btn-success" v-show="order.status === 'PENDING'" @click.prevent="complete(order.id)">Complete</button>
                                     <!--
                                     <router-link class="btn btn-sm btn-primary"
                                         :to="{ name: 'complete-order', params: { orderId: order.id } }">Edit</router-link>
@@ -47,6 +48,11 @@ import { ApiClientOrderRepository } from '../../repositories/ApiClientOrderRepos
 const orders = ref<Array<Order>>([])
 
 const orderRepository = new ApiClientOrderRepository()
+
+async function complete(orderId: string): Promise<void> {
+    await orderRepository.complete(orderId)
+    orders.value = await orderRepository.findByCurrentUser()
+}
 
 onMounted(async () => {
     orders.value = await orderRepository.findByCurrentUser()
