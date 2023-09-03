@@ -11,6 +11,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <Navbar />
             <Cart />
+            <Profile />
           </div>
         </div>
       </nav>
@@ -24,6 +25,7 @@
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Navbar from './components/Navbar.vue'
 import Cart from './components/Cart.vue'
+import Navbar from './components/Navbar.vue'
+import Profile from './components/Profile.vue'
 </script>

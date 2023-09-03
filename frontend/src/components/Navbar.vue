@@ -1,11 +1,5 @@
 <template>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-        <li class="nav-item" v-show="isLogged()">
-            <a class="nav-link" href="#" @click.prevent="logOut">
-                LogOut
-            </a>
-        </li>
-
         <li class="nav-item">
             <router-link class="nav-link" :to="{ name: 'home' }">Home</router-link>
         </li>
@@ -57,10 +51,6 @@ async function createStore(): Promise<void> {
   } else {
     router.push({ name: 'home' })
   }
-}
-
-function logOut(): void {
-  userStore.clear()
 }
 
 function isLogged(): boolean {
