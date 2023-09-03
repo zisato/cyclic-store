@@ -48,6 +48,7 @@ export class AppContainerConfiguration implements ContainerConfiguration {
     private registerAlias(container: AwilixContainer): void {
         container.register({
             categoryRepository: aliasTo('inMemoryCategoryRepository'),
+            orderRepository: aliasTo('inMemoryOrderRepository'),
             productRepository: aliasTo('inMemoryProductRepository'),
             storeRepository: aliasTo('inMemoryStoreRepository'),
             userRepository: aliasTo('inMemoryUserRepository'),

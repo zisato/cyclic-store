@@ -1,5 +1,5 @@
 <template>
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ms-lg-4">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ms-lg-4" v-show="isLogged()">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="cartNavbarDropdown" role="button" data-bs-toggle="dropdown"
                 data-bs-auto-close="outside" aria-expanded="false">
@@ -92,6 +92,10 @@ const userStore = useUserStore();
 const cartStore = useCartStore();
 const cart = storeToRefs(cartStore).cart
 
+function isLogged(): boolean {
+  return userStore.user !== null
+}
+
 function addQuantity(productId: string): void {
     cartStore.addQuantity(productId)
 }
@@ -105,7 +109,7 @@ function removeItemFromCart(productId: string): void {
 }
 
 async function checkoutCart(): Promise<void> {
-    cartStore.clear()
+    cartStore.checkout()
 }
 
 function cartHasItems(): boolean {

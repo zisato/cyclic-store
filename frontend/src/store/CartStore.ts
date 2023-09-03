@@ -1,5 +1,6 @@
 import { Cart, CartItem } from '../models/Cart';
 
+import { ApiClientOrderRepository } from '../repositories/ApiClientOrderRepository';
 import { CartLocalStorage } from '../storage/CartLocalStorage';
 import { defineStore } from 'pinia';
 
@@ -22,7 +23,20 @@ export const useCartStore = defineStore({
     cart: getCart(),
   }),
   actions: {
-    clear(): void {
+    async checkout(): Promise<void> {
+      const orderRepository = new ApiClientOrderRepository();
+      const order = {
+        id: '',
+        status: 'pending',
+        items: this.cart.items.map((cartItem) => {
+          return {
+            productId: cartItem.productId,
+            quantity: cartItem.quantity
+          };
+        })
+      }
+      await orderRepository.create(order)
+
       CartLocalStorage.remove();
 
       this.cart = { items: [] }
