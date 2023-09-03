@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '../store/UserStore'
+import { useUserStore } from '../store/UserStore';
+import { UniqueNameGenerator } from '../services/UniqueNameGenerator';
 import { ApiClientStoreRepository } from '../repositories/ApiClientStoreRepository';
 import { v1 } from 'uuid'
 import { useRouter } from 'vue-router';
@@ -39,12 +40,14 @@ const router = useRouter();
 async function createStore(): Promise<void> {
   userStore.addSellerRole()
 
+  const storeId = v1().toString()
   const storeRepository = new ApiClientStoreRepository();
   const store = {
-    id: v1().toString(),
-    name: 'Store'
+    id: storeId,
+    name: UniqueNameGenerator.generateName()
   }
   await storeRepository.create(store)
+  userStore.addStoreId(storeId)
 
   if (router.currentRoute.value.name === 'home') {
     router.go(0)

@@ -33,6 +33,13 @@ export const useUserStore = defineStore({
 
             UserLocalStorage.remove();
         },
+        addStoreId(storeId: string): void {
+            if (this.user) {
+                this.user = { ...this.user, storeId }
+
+                UserLocalStorage.set(this.user);
+            }
+        },
         async addSellerRole(): Promise<void> {
             if (this.user === null) {
                 return;
