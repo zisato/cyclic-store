@@ -11,12 +11,21 @@
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartNavbarDropdown">
-                <li>
+                <li class="justify-content-center">
                     <div class="dropdown-item bg-body" style="width: max-content;">
-                        <table class="table">
+                        <table class="table table-sm mb-0">
                             <tbody>
-                                <tr v-for="item in cart.items">
-                                    <td>
+                                <tr v-show="!cartHasItems()">
+                                    <td class="border-bottom-0">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="text-black">Empty cart</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="mb-1" v-for="item, index in cart.items">
+                                    <td :class="{ 'border-bottom-0': index === cart.items.length - 1 }">
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="text-black">{{ item.name }}</span>
@@ -62,7 +71,7 @@
                 </li>
 
                 <li v-show="cartHasItems()">
-                    <div class="d-flex d-grid gap-2 col-8 mx-auto" v-on:click="checkoutCart()">
+                    <div class="d-flex d-grid gap-2 col-8 mx-auto justify-content-center" v-on:click="checkoutCart()">
                         <button class="btn btn-outline-secondary">
                             Complete order
                         </button>
