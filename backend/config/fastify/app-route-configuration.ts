@@ -6,6 +6,7 @@ import CreateOrderController from '../../src/infrastructure/order/controller/cre
 import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
 import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
 import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/customer-authenticated-handler';
+import DeleteTableController from '../../src/infrastructure/dynamodb/controller/delete-table-controller';
 import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
@@ -22,6 +23,7 @@ import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-han
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
+import UpdateItemController from '../../src/infrastructure/dynamodb/controller/update-item-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
@@ -283,6 +285,8 @@ export class AppRouteConfiguration implements RouteConfiguration {
   private dynamoRoutesOptions(container: Container): RouteOptions[] {
     const listTablesController = container.getTyped(ListTablesController);
     const listItemsController = container.getTyped(ListItemsController);
+    const updateItemController = container.getTyped(UpdateItemController);
+    const deleteTableController = container.getTyped(DeleteTableController);
 
     const listTablesRoute: RouteOptions = {
       method: 'GET',
@@ -292,13 +296,27 @@ export class AppRouteConfiguration implements RouteConfiguration {
 
     const listItemsRoute: RouteOptions = {
       method: 'GET',
-      url: '/dynamo/items',
+      url: '/dynamo/tables/:tableName/items',
       handler: listItemsController.handle.bind(listItemsController)
+    };
+
+    const updateItemRoute: RouteOptions = {
+      method: 'PUT',
+      url: '/dynamo/tables/:tableName/items',
+      handler: updateItemController.handle.bind(updateItemController)
+    };
+
+    const deleteTableRoute: RouteOptions = {
+      method: 'DELETE',
+      url: '/dynamo/tables/:tableName',
+      handler: deleteTableController.handle.bind(deleteTableController)
     };
 
     return [
       listTablesRoute,
-      listItemsRoute
+      listItemsRoute,
+      updateItemRoute,
+      deleteTableRoute
     ]
   }
 }

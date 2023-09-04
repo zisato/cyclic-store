@@ -16,6 +16,7 @@ enum Method {
   get = 'GET',
   post = 'POST',
   patch = 'PATCH',
+  put = 'PUT',
   delete = 'DELETE'
 }
 
@@ -77,6 +78,22 @@ export class ApiClient {
   ): Promise<ApiClientResponse<T>> {
     const response = await this.doRequest<T>({
       method: Method.patch,
+      url,
+      data,
+    });
+
+    return {
+      statusCode: response.status,
+      body: response.data,
+    };
+  }
+
+  async put<T extends {}>(
+    url: string,
+    data: {} = {}
+  ): Promise<ApiClientResponse<T>> {
+    const response = await this.doRequest<T>({
+      method: Method.put,
       url,
       data,
     });

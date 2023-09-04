@@ -4,12 +4,12 @@ import { DynamoClient } from '../../../shared/dynamo/dynamo-client';
 import { RequestSchemaValidator } from '../../json-schema/request-schema-validator';
 import joi from 'joi';
 
-type ListItemsDtoRequestParams = {
+type DeleteTableRequestParams = {
     tableName: string;
 }
 
-class ListItemsDto {
-    private readonly validationSchema: joi.ObjectSchema<ListItemsDtoRequestParams> =
+class DeleteTableDto {
+    private readonly validationSchema: joi.ObjectSchema<DeleteTableRequestParams> =
     joi.object({
       tableName: joi.string().required(),
     });
@@ -24,16 +24,14 @@ class ListItemsDto {
     }
 }
 
-export default class ListItemsController {
+export default class DeleteTableController {
     constructor(private readonly dynamoClient: DynamoClient) {}
 
     handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-        const listItemsDto = new ListItemsDto(request);
-        const tableName = listItemsDto.requestParams.tableName;
-        const results = await this.dynamoClient.find(tableName);
+        const deleteTableDto = new DeleteTableDto(request);
+        const tableName = deleteTableDto.requestParams.tableName;
+        await this.dynamoClient.deleteTable(tableName);
 
-        reply.status(200).send({
-          data: results
-        });
+        reply.status(201).send();
     }
 }

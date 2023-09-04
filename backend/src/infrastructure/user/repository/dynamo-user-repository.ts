@@ -1,5 +1,6 @@
 import { DynamoClient, DynamoClientItem } from '../../../shared/dynamo/dynamo-client';
 
+import { DynamoMigration } from '../../../shared/dynamo/dynamo-migration';
 import { ModelNotFoundError } from '../../../domain/error/model-not-found-error';
 import { User } from '../../../domain/user/user';
 import { UserRepository } from '../../../domain/user/repository/user-repository';
@@ -7,7 +8,14 @@ import { UserRepository } from '../../../domain/user/repository/user-repository'
 export default class DynamoUserRepository implements UserRepository {
     private readonly tableName: string = 'user';
 
-    constructor(private readonly dynamoClient: DynamoClient) { }
+    constructor(
+        private readonly dynamoMigration: DynamoMigration,
+        private readonly dynamoClient: DynamoClient
+    ) {
+        if (!this.dynamoMigration.existsTable(this.tableName)) {
+            this.dynamoMigration.createTable(this.tableName);
+        }
+    }
 
     async exists(id: string): Promise<boolean> {
         const item = await this.dynamoClient.findOne(this.tableName, { id });

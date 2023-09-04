@@ -4,31 +4,35 @@ import {
     PutCommand,
     ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
-
-import { DynamoMigration } from './dynamo-migration';
+import { DeleteTableCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
 
 export type DynamoClientItem = Record<string, unknown>;
 
 export class DynamoClient {
     constructor(
-        private readonly dynamoMigration: DynamoMigration,
         private readonly dynamoDBDocumentClient: DynamoDBDocumentClient
     ) { }
 
     async getTables(): Promise<string[]> {
-        return this.dynamoMigration.listTables();
+        const tables = await this.dynamoDBDocumentClient.send(
+            new ListTablesCommand({})
+        )
+
+        if (!tables.TableNames) {
+            return [];
+        }
+
+        return tables.TableNames;
     }
 
     async deleteTable(tableName: string): Promise<void> {
-        this.dynamoMigration.deleteTable(tableName);
+        this.dynamoDBDocumentClient.send(new DeleteTableCommand({ TableName: tableName }));
     }
 
     async findOne(
         tableName: string,
         conditions?: { [key: string]: string | number | boolean | null }
     ): Promise<DynamoClientItem | undefined> {
-        this.createTableWhenNotExists(tableName);
-
         const keyConditions = this.conditionsToScanFilter(conditions);
 
         const results = await this.dynamoDBDocumentClient.send(
@@ -51,8 +55,6 @@ export class DynamoClient {
         conditions?: { [key: string]: string | number | boolean | null },
         limit?: number
     ): Promise<DynamoClientItem[]> {
-        this.createTableWhenNotExists(tableName);
-
         const keyConditions = this.conditionsToScanFilter(conditions);
 
         const results = await this.dynamoDBDocumentClient.send(
@@ -71,8 +73,6 @@ export class DynamoClient {
     }
 
     async save(tableName: string, item: DynamoClientItem): Promise<void> {
-        this.createTableWhenNotExists(tableName);
-
         await this.dynamoDBDocumentClient.send(
             new PutCommand({
                 TableName: tableName,
@@ -82,8 +82,6 @@ export class DynamoClient {
     }
 
     async delete(tableName: string, key: Record<string, unknown>): Promise<void> {
-        this.createTableWhenNotExists(tableName);
-
         await this.dynamoDBDocumentClient.send(
             new DeleteCommand({
                 TableName: tableName,
@@ -116,13 +114,4 @@ export class DynamoClient {
             {}
         );
     }
-
-
-  private async createTableWhenNotExists(tableName: string): Promise<void> {
-    const existsTable = await this.dynamoMigration.existsTable(tableName);
-
-    if (!existsTable) {
-      await this.dynamoMigration.createTable(tableName);
-    }
-  }
 }

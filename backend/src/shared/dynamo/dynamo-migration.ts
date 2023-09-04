@@ -38,16 +38,16 @@ export class DynamoMigration {
           WriteCapacityUnits: 1,
         },
         AttributeDefinitions: [
-          /*{
+          {
             AttributeName: 'id',
             AttributeType: 'S',
-          },*/
+          },
         ],
         KeySchema: [
-          /*{
+          {
             AttributeName: 'id',
             KeyType: 'HASH',
-          },*/
+          },
         ],
       })
     );
