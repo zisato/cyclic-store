@@ -2,16 +2,19 @@ import { AwilixContainer } from './container/awilix-container';
 import { AwilixContainer as AwilixContainerBase } from 'awilix';
 import { Container } from './container/container';
 import { ContainerConfiguration } from './configuration/container-configuration';
+import { FrameworkAdapter } from './configuration/framework-adapter';
 import { KernelError } from './error/kernel-error';
 import { NodeConfigParameters } from './parameters/node-config-parameters';
 import { Parameters } from './parameters/parameters';
 import { Server } from 'http';
 import { createContainer } from 'awilix';
-import { FrameworkAdapter } from './configuration/framework-adapter';
+
+type BeforeServerStart = (container: Container, parameters: Parameters) => Promise<void>
 
 export class Kernel {
   private containerConfiguration: ContainerConfiguration;
   private frameworkAdapter: FrameworkAdapter;
+  private beforeServerStart: BeforeServerStart;
 
   private isKernelBooted: boolean = false;
   private parameters: Parameters | null = null;
@@ -19,10 +22,12 @@ export class Kernel {
 
   constructor({
     frameworkAdapter,
-    containerConfiguration
+    containerConfiguration,
+    beforeServerStart,
   }: {
     frameworkAdapter: FrameworkAdapter;
-    containerConfiguration?: ContainerConfiguration
+    containerConfiguration?: ContainerConfiguration,
+    beforeServerStart?: BeforeServerStart
   }) {
     this.frameworkAdapter = frameworkAdapter;
     this.containerConfiguration = containerConfiguration ?? {
@@ -31,6 +36,8 @@ export class Kernel {
         _parameters: Parameters
       ): void { },
     };
+    const nullBeforeServerStart = async (_container: Container, _parameters: Parameters): Promise<void> => {};
+    this.beforeServerStart = beforeServerStart ?? nullBeforeServerStart;
   }
 
   boot(): void {
@@ -47,6 +54,7 @@ export class Kernel {
   async startServer(port: number, host?: string): Promise<Server> {
     this.boot();
     this.bootFramework();
+    await this.runBeforeServerStart();
 
     return this.frameworkAdapter.startServer(port, host);
   }
@@ -91,5 +99,12 @@ export class Kernel {
     this.containerConfiguration.configureContainer(container, parameters);
 
     return new AwilixContainer(container);
+  }
+
+  private async runBeforeServerStart(): Promise<void> {    
+    const container = this.getContainer();
+    const parameters = this.getParameters();
+
+    await this.beforeServerStart(container, parameters);
   }
 }

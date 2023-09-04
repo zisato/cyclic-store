@@ -1,10 +1,13 @@
 import { AppContainerConfiguration } from '../config/app-container-configuration';
-import { AppPluginConfiguration } from '../config/fastify/app-plugin-configuration';
-import { AppRouteConfiguration } from '../config/fastify/app-route-configuration';
 import { AppErrorHandlerConfiguration } from '../config/fastify/app-error-handler-configuration';
 import { AppHookConfiguration } from '../config/fastify/app-hook-configuration';
+import { AppPluginConfiguration } from '../config/fastify/app-plugin-configuration';
+import { AppRouteConfiguration } from '../config/fastify/app-route-configuration';
+import { Container } from './shared/kernel/container/container';
+import { DynamoMigration } from './shared/dynamo/dynamo-migration';
 import { FastifyFrameworkAdapter } from './shared/kernel/configuration/fastify/fastify-framework-adapter';
 import { Kernel } from './shared/kernel/kernel';
+import { Parameters } from './shared/kernel/parameters/parameters';
 
 export class App extends Kernel {
   constructor() {
@@ -14,10 +17,19 @@ export class App extends Kernel {
       errorHandlerConfiguration: new AppErrorHandlerConfiguration(),
       hookConfiguration: new AppHookConfiguration(),
     });
+    const beforeServerStart = async (container: Container, _parameters: Parameters): Promise<void> => {
+      const dynamoMigration = container.getTyped(DynamoMigration);
+      const tableNames = ['user'];
+
+      for (const tableName of tableNames) {
+        await dynamoMigration.createTable(tableName);
+      }
+    }
     
     super({
       containerConfiguration: new AppContainerConfiguration(),
-      frameworkAdapter
+      frameworkAdapter,
+      beforeServerStart
     });
   }
 }
