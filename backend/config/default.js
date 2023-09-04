@@ -18,5 +18,10 @@ module.exports = {
   server: {
     host: process.env.HTTP_HOST,
     port: process.env.HTTP_PORT
-  }
+  },
+  aws: {
+    dynamodb: {
+      endpoint: process.env.AWS_DYNAMODB_ENDPOINT,
+    },
+  },
 };

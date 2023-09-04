@@ -32,8 +32,8 @@ export default class FastifyErrorHandler {
   };
 
   private logError(error: Error): void {
-    const payload = { trace: error.stack };
+    const payload = { message: error.message, trace: error.stack };
 
-    console.error({ payload }, error.message);
+    console.error({ payload });
   }
 }

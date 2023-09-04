@@ -1,4 +1,5 @@
 import AddSellerRoleController from '../../src/infrastructure/user/controller/add-seller-role-controller';
+import CompleteOrderController from '../../src/infrastructure/order/controller/complete-order-controller';
 import { Container } from '../../src/shared/kernel/container/container';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
 import CreateOrderController from '../../src/infrastructure/order/controller/create-order-controller';
@@ -8,10 +9,12 @@ import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-h
 import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
+import ListItemsController from '../../src/infrastructure/dynamodb/controller/list-items-controller';
 import ListOrdersBySellerController from '../../src/infrastructure/order/controller/list-orders-by-seller-controller';
 import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
 import ListProductsController from '../../src/infrastructure/product/controller/list-products-controller';
 import ListStoresController from '../../src/infrastructure/store/controller/list-stores-controller';
+import ListTablesController from '../../src/infrastructure/dynamodb/controller/list-tables-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
 import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastify/router-configuration';
 import { RouteOptions } from 'fastify';
@@ -20,7 +23,6 @@ import StatusController from '../../src/infrastructure/controller/status-control
 import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
-import CompleteOrderController from '../../src/infrastructure/order/controller/complete-order-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -31,6 +33,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     const storeRoutesOptions = this.storeRoutesOptions(container);
     const userRoutesOptions = this.userRoutesOptions(container);
     const authRoutesOptions = this.authRoutesOptions(container);
+    const dynamoRouteOptions = this.dynamoRoutesOptions(container);
 
     return [
       ...commonRoutesOptions,
@@ -39,7 +42,8 @@ export class AppRouteConfiguration implements RouteConfiguration {
       ...productRoutesOptions,
       ...storeRoutesOptions,
       ...userRoutesOptions,
-      ...authRoutesOptions
+      ...authRoutesOptions,
+      ...dynamoRouteOptions
     ];
   }
 
@@ -274,5 +278,27 @@ export class AppRouteConfiguration implements RouteConfiguration {
     return [
       loginCallbackRoute
     ];
+  }
+
+  private dynamoRoutesOptions(container: Container): RouteOptions[] {
+    const listTablesController = container.getTyped(ListTablesController);
+    const listItemsController = container.getTyped(ListItemsController);
+
+    const listTablesRoute: RouteOptions = {
+      method: 'GET',
+      url: '/dynamo/tables',
+      handler: listTablesController.handle.bind(listTablesController)
+    };
+
+    const listItemsRoute: RouteOptions = {
+      method: 'GET',
+      url: '/dynamo/items',
+      handler: listItemsController.handle.bind(listItemsController)
+    };
+
+    return [
+      listTablesRoute,
+      listItemsRoute
+    ]
   }
 }

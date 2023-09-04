@@ -2,6 +2,7 @@ import CreateCategory from '../views/category/CreateCategory.vue';
 import CreateProduct from '../views/product/CreateProduct.vue';
 import Home from '../views/Home.vue';
 import ListCategories from '../views/category/ListCategories.vue';
+import ListItems from '../views/dynamo/ListItems.vue';
 import ListSellerOrders from '../views/order/ListSellerOrders.vue';
 import ListSellerProducts from '../views/product/ListSellerProducts.vue';
 import Login from '../views/Login.vue';
@@ -28,6 +29,8 @@ const routes: RouteRecordRaw[] = [
     { path: '/categories', component: ListCategories, name: 'list-categories' },
     { path: '/categories/create', component: CreateCategory, name: 'create-category' },
     { path: '/categories/:categoryId/update', component: UpdateCategory, name: 'update-category' },
+
+    { path: '/dynamo/items', component: ListItems, name: 'list-dynamo-items' },
 ];
 
 export default routes;
