@@ -1,36 +1,48 @@
 import { DynamoClient, DynamoItem } from '../../../shared/dynamo/dynamo-client';
 
-import { DynamoMigration } from '../../../shared/dynamo/dynamo-migration';
 import { ModelNotFoundError } from '../../../domain/error/model-not-found-error';
+import { TableSchema } from '../../../shared/dynamo/dynamo-migration';
 import { User } from '../../../domain/user/user';
 import { UserRepository } from '../../../domain/user/repository/user-repository';
 
 export default class DynamoUserRepository implements UserRepository {
-    private readonly tableName: string = 'user';
+    constructor(private readonly dynamoClient: DynamoClient) {}
 
-    constructor(
-        private readonly dynamoMigration: DynamoMigration,
-        private readonly dynamoClient: DynamoClient
-    ) {
-        if (!this.dynamoMigration.existsTable(this.tableName)) {
-            this.dynamoMigration.createTable(this.tableName);
+    static tableName(): string {
+        return 'user'
+    }
+
+    static tableSchema(): TableSchema {
+        return {
+            AttributeDefinitions: [
+                {
+                    AttributeName: 'id',
+                    AttributeType: 'S',
+                },
+            ],
+            KeySchema: [
+                {
+                    AttributeName: 'id',
+                    KeyType: 'HASH',
+                },
+            ],
         }
     }
 
     async exists(id: string): Promise<boolean> {
-        const item = await this.dynamoClient.findOne(this.tableName, { id });
+        const item = await this.dynamoClient.findOne(DynamoUserRepository.tableName(), { id });
 
         return item !== undefined;
     }
 
     async existsByProviderId(providerId: string): Promise<boolean> {
-        const item = await this.dynamoClient.findOne(this.tableName, { providerId });
+        const item = await this.dynamoClient.findOne(DynamoUserRepository.tableName(), { providerId });
 
         return item !== undefined;
     }
 
     async get(id: string): Promise<User> {
-        const item = await this.dynamoClient.findOne(this.tableName, { id });
+        const item = await this.dynamoClient.findOne(DynamoUserRepository.tableName(), { id });
 
         if (item === undefined) {
             throw new ModelNotFoundError(`User with id ${id} not found`);
@@ -40,7 +52,7 @@ export default class DynamoUserRepository implements UserRepository {
     }
 
     async getByProviderId(providerId: string): Promise<User> {
-        const item = await this.dynamoClient.findOne(this.tableName, { providerId });
+        const item = await this.dynamoClient.findOne(DynamoUserRepository.tableName(), { providerId });
 
         if (item === undefined) {
             throw new ModelNotFoundError(`User with providerId ${providerId} not found`);
@@ -50,7 +62,7 @@ export default class DynamoUserRepository implements UserRepository {
     }
 
     async save(user: User): Promise<void> {
-        this.dynamoClient.save(this.tableName, this.modelToItem(user));
+        this.dynamoClient.save(DynamoUserRepository.tableName(), this.modelToItem(user));
     }
 
     private itemToModel(item: DynamoItem): User {

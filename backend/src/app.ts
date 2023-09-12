@@ -5,6 +5,7 @@ import { AppPluginConfiguration } from '../config/fastify/app-plugin-configurati
 import { AppRouteConfiguration } from '../config/fastify/app-route-configuration';
 import { Container } from './shared/kernel/container/container';
 import { DynamoMigration } from './shared/dynamo/dynamo-migration';
+import DynamoUserRepository from './infrastructure/user/repository/dynamo-user-repository';
 import { FastifyFrameworkAdapter } from './shared/kernel/configuration/fastify/fastify-framework-adapter';
 import { Kernel } from './shared/kernel/kernel';
 import { Parameters } from './shared/kernel/parameters/parameters';
@@ -19,11 +20,8 @@ export class App extends Kernel {
     });
     const beforeServerStart = async (container: Container, _parameters: Parameters): Promise<void> => {
       const dynamoMigration = container.getTyped(DynamoMigration);
-      const tableNames = ['user'];
 
-      for (const tableName of tableNames) {
-        await dynamoMigration.createTable(tableName);
-      }
+      await dynamoMigration.createTable(DynamoUserRepository.tableName(), DynamoUserRepository.tableSchema());
     }
     
     super({

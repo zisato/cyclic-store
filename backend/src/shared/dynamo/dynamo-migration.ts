@@ -7,6 +7,17 @@ import {
 
 export type DynamoClientItem = Record<string, unknown>;
 
+export type TableSchema = {
+  AttributeDefinitions: {
+    AttributeName: string;
+    AttributeType: 'B' | 'N' | 'S';
+  }[];
+  KeySchema: {
+    AttributeName: string;
+    KeyType: 'HASH' | 'RANGE';
+  }[],
+}
+
 export class DynamoMigration {
   constructor(private readonly dynamoDBClient: DynamoDBClient) { }
 
@@ -23,7 +34,7 @@ export class DynamoMigration {
     return tables.TableNames;
   }
 
-  async createTable(tableName: string): Promise<void> {
+  async createTable(tableName: string, tableSchema: TableSchema): Promise<void> {
     const existsTable = await this.existsTable(tableName);
 
     if (existsTable) {
@@ -37,18 +48,7 @@ export class DynamoMigration {
           ReadCapacityUnits: 1,
           WriteCapacityUnits: 1,
         },
-        AttributeDefinitions: [
-          {
-            AttributeName: 'id',
-            AttributeType: 'S',
-          },
-        ],
-        KeySchema: [
-          {
-            AttributeName: 'id',
-            KeyType: 'HASH',
-          },
-        ],
+        ...tableSchema
       })
     );
   }
