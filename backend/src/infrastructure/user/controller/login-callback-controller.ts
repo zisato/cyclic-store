@@ -2,20 +2,18 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { CreateCustomerFromTokenCommand } from '../../../application/user/command/create-customer-from-token/create-customer-from-token-command';
 import CreateCustomerFromTokenCommandHandler from '../../../application/user/command/create-customer-from-token/create-customer-from-token-command-handler';
-import { FindUserByTokenQuery } from '../../../application/user/query/find-user-by-token/find-user-by-token-query';
-import FindUserByTokenQueryHandler from '../../../application/user/query/find-user-by-token/find-user-by-token-query-handler';
-import { GetStoreBySellerQuery } from '../../../application/store/query/get-store-by-seller/get-store-by-seller-query';
-import GetStoreBySellerQueryHandler from '../../../application/store/query/get-store-by-seller/get-store-by-seller-query-handler';
-import JsonApiUserTransformer from '../transformer/json-api-user-transformer';
+// import { FindUserByTokenQuery } from '../../../application/user/query/find-user-by-token/find-user-by-token-query';
+// import FindUserByTokenQueryHandler from '../../../application/user/query/find-user-by-token/find-user-by-token-query-handler';
+// import { GetStoreBySellerQuery } from '../../../application/store/query/get-store-by-seller/get-store-by-seller-query';
+// import GetStoreBySellerQueryHandler from '../../../application/store/query/get-store-by-seller/get-store-by-seller-query-handler';
+// import JsonApiUserTransformer from '../transformer/json-api-user-transformer';
 import { LoginCallbackDto } from './dto/login-callback-dto';
-import { Store } from '../../../domain/store/store';
+
+// import { Store } from '../../../domain/store/store';
 
 export default class LoginCallbackController {
     constructor(
-        private readonly createCustomerFromTokenCommandHandler: CreateCustomerFromTokenCommandHandler,
-        private readonly findUserByTokenQueryHandler: FindUserByTokenQueryHandler,
-        private readonly getStoreBySellerQueryHandler: GetStoreBySellerQueryHandler,
-        private readonly jsonApiUserTransformer: JsonApiUserTransformer
+        private readonly createCustomerFromTokenCommandHandler: CreateCustomerFromTokenCommandHandler
     ) {}
 
     handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
@@ -25,6 +23,8 @@ export default class LoginCallbackController {
         const command = new CreateCustomerFromTokenCommand(loginCallbackDto.requestBody.data.id, token);
         await this.createCustomerFromTokenCommandHandler.execute(command);
 
+        return reply.status(201).send();
+        /*
         const findUserByTokenQuery = new FindUserByTokenQuery(token);
         const user = await this.findUserByTokenQueryHandler.execute(findUserByTokenQuery);
 
@@ -39,5 +39,6 @@ export default class LoginCallbackController {
         return reply.status(200).send({
             data: userJsonApi
         });
+        */
     }
 }

@@ -1,6 +1,7 @@
 import { ApiClient } from '../clients/api-client'
 import { User } from '../models/User'
 import { v1 } from 'uuid'
+import { TokenLocalStorage } from '../storage/TokenLocalStorage'
 
 type JsonApiResponse<T> = {
   data: T
@@ -26,7 +27,7 @@ export class ApiClientUserRepository {
   }
 
   async getByToken(token: string): Promise<User> {
-    const response = await this.apiClient.post<JsonApiResponse<JsonApiUserDto>>(
+    await this.apiClient.post<JsonApiResponse<JsonApiUserDto>>(
       '/login/callback',
       {
         data: {
@@ -36,6 +37,12 @@ export class ApiClientUserRepository {
           },
         },
       }
+    );
+
+    TokenLocalStorage.set({ value: token });
+
+    const response = await this.apiClient.get<JsonApiResponse<JsonApiUserDto>>(
+      '/users/me'
     );
 
     return {

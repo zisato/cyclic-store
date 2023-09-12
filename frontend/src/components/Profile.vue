@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { TokenLocalStorage } from '../storage/TokenLocalStorage';
 import { useUserStore } from '../store/UserStore'
 import { useRouter } from 'vue-router';
 
@@ -30,6 +31,7 @@ function isLogged(): boolean {
 
 function logOut(): void {
   userStore.clear()
+  TokenLocalStorage.remove();
 
   if (router.currentRoute.value.name === 'home') {
     router.go(0)

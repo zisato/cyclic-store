@@ -150,6 +150,6 @@ export class ApiClient {
       return undefined;
     }
 
-    return `Bearer ${token.token}`;
+    return `Bearer ${token.value}`;
   }
 }

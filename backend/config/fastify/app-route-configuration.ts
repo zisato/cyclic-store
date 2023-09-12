@@ -27,6 +27,7 @@ import StoreDetailController from '../../src/infrastructure/store/controller/sto
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
 import UpdateItemController from '../../src/infrastructure/dynamodb/controller/update-item-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
+import UserDetailController from '../../src/infrastructure/user/controller/user-detail-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -254,7 +255,17 @@ export class AppRouteConfiguration implements RouteConfiguration {
   private userRoutesOptions(container: Container): RouteOptions[] {
     const customerAuthenticatedHandler = container.getTyped(CustomerAuthenticatedHandler);
 
+    const userDetailController = container.getTyped(UserDetailController);
     const addSellerRoleController = container.getTyped(AddSellerRoleController);
+
+    const userDetailRoleRoute: RouteOptions = {
+      method: 'GET',
+      url: '/users/me',
+      preHandler: [
+        customerAuthenticatedHandler.handle.bind(customerAuthenticatedHandler)
+      ],
+      handler: userDetailController.handle.bind(userDetailController)
+    }
 
     const addSellerRoleRoute: RouteOptions = {
       method: 'POST',
@@ -266,6 +277,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     }
 
     return [
+      userDetailRoleRoute,
       addSellerRoleRoute
     ];
   }
