@@ -1,4 +1,4 @@
-import { DynamoClient, DynamoClientItem } from '../../../shared/dynamo/dynamo-client';
+import { DynamoClient, DynamoItem } from '../../../shared/dynamo/dynamo-client';
 
 import { DynamoMigration } from '../../../shared/dynamo/dynamo-migration';
 import { ModelNotFoundError } from '../../../domain/error/model-not-found-error';
@@ -53,7 +53,7 @@ export default class DynamoUserRepository implements UserRepository {
         this.dynamoClient.save(this.tableName, this.modelToItem(user));
     }
 
-    private itemToModel(item: DynamoClientItem): User {
+    private itemToModel(item: DynamoItem): User {
         if (typeof item.id !== 'string') {
             throw new Error('Invalid id type')
         }
@@ -69,7 +69,7 @@ export default class DynamoUserRepository implements UserRepository {
         return new User({ id: item.id, providerId: item.providerId, roles: item.roles });
     }
 
-    private modelToItem(user: User): DynamoClientItem {
+    private modelToItem(user: User): DynamoItem {
         return {
             id: user.id,
             providerId: user.providerId,

@@ -5,35 +5,35 @@ import { RequestSchemaValidator } from '../../json-schema/request-schema-validat
 import joi from 'joi';
 
 type ListItemsDtoRequestParams = {
-    tableName: string;
+  tableName: string;
 }
 
 class ListItemsDto {
-    private readonly validationSchema: joi.ObjectSchema<ListItemsDtoRequestParams> =
+  private readonly validationSchema: joi.ObjectSchema<ListItemsDtoRequestParams> =
     joi.object({
       tableName: joi.string().required(),
     });
 
-    readonly requestParams;
+  readonly requestParams;
 
-    constructor(request: FastifyRequest) {
-      this.requestParams = RequestSchemaValidator.validate(
-        request.params as object,
-        this.validationSchema
-      );
-    }
+  constructor(request: FastifyRequest) {
+    this.requestParams = RequestSchemaValidator.validate(
+      request.params as object,
+      this.validationSchema
+    );
+  }
 }
 
 export default class ListItemsController {
-    constructor(private readonly dynamoClient: DynamoClient) {}
+  constructor(private readonly dynamoClient: DynamoClient) { }
 
-    handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-        const listItemsDto = new ListItemsDto(request);
-        const tableName = listItemsDto.requestParams.tableName;
-        const results = await this.dynamoClient.find(tableName);
+  handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const listItemsDto = new ListItemsDto(request);
+    const tableName = listItemsDto.requestParams.tableName;
+    const results = await this.dynamoClient.find(tableName);
 
-        reply.status(200).send({
-          data: results
-        });
-    }
+    reply.status(200).send({
+      data: results
+    });
+  }
 }

@@ -4,16 +4,22 @@ import {
     PutCommand,
     ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { DeleteTableCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
+import { DeleteTableCommand, DescribeTableCommand, KeySchemaElement, KeyType, ListTablesCommand, TableDescription } from '@aws-sdk/client-dynamodb';
 
-export type DynamoClientItem = Record<string, unknown>;
+export type DynamoItem = Record<string, unknown>;
+
+export type DynamoTableDescription = {
+    primaryKeys: string[];
+    status: string;
+    sizeInBytes: number;
+}
 
 export class DynamoClient {
     constructor(
         private readonly dynamoDBDocumentClient: DynamoDBDocumentClient
     ) { }
 
-    async getTables(): Promise<string[]> {
+    async getTablesName(): Promise<string[]> {
         const tables = await this.dynamoDBDocumentClient.send(
             new ListTablesCommand({})
         )
@@ -25,6 +31,30 @@ export class DynamoClient {
         return tables.TableNames;
     }
 
+    async describeTable(tableName: string): Promise<DynamoTableDescription> {
+        const describeTable = await this.dynamoDBDocumentClient.send(new DescribeTableCommand({
+            TableName: tableName
+        }));
+
+        if (!describeTable.Table) {
+            throw new Error('Table is required');
+        }
+
+        if (!describeTable.Table.TableStatus) {
+            throw new Error('Table.TableStatus is required');
+        }
+
+        if (!describeTable.Table.TableSizeBytes) {
+            throw new Error('Table.TableSizeBytes is required');
+        }
+
+        return {
+            primaryKeys: await this.getPrimaryKeys(describeTable.Table),
+            status: describeTable.Table?.TableStatus,
+            sizeInBytes: describeTable.Table?.TableSizeBytes
+        };
+    }
+
     async deleteTable(tableName: string): Promise<void> {
         this.dynamoDBDocumentClient.send(new DeleteTableCommand({ TableName: tableName }));
     }
@@ -32,7 +62,7 @@ export class DynamoClient {
     async findOne(
         tableName: string,
         conditions?: { [key: string]: string | number | boolean | null }
-    ): Promise<DynamoClientItem | undefined> {
+    ): Promise<DynamoItem | undefined> {
         const keyConditions = this.conditionsToScanFilter(conditions);
 
         const results = await this.dynamoDBDocumentClient.send(
@@ -54,7 +84,7 @@ export class DynamoClient {
         tableName: string,
         conditions?: { [key: string]: string | number | boolean | null },
         limit?: number
-    ): Promise<DynamoClientItem[]> {
+    ): Promise<DynamoItem[]> {
         const keyConditions = this.conditionsToScanFilter(conditions);
 
         const results = await this.dynamoDBDocumentClient.send(
@@ -65,14 +95,10 @@ export class DynamoClient {
             })
         );
 
-        if (!results.Items) {
-            return [];
-        }
-
-        return results.Items;
+        return results.Items ?? [];
     }
 
-    async save(tableName: string, item: DynamoClientItem): Promise<void> {
+    async save(tableName: string, item: DynamoItem): Promise<void> {
         await this.dynamoDBDocumentClient.send(
             new PutCommand({
                 TableName: tableName,
@@ -113,5 +139,25 @@ export class DynamoClient {
             },
             {}
         );
+    }
+
+    private async getPrimaryKeys(tableDescription: TableDescription): Promise<string[]> {
+        const primaryKeysKeySchema = tableDescription.KeySchema?.filter((keySchema: KeySchemaElement) => {
+            return keySchema.KeyType === KeyType.HASH;
+        })
+
+        if (!primaryKeysKeySchema) {
+            return [];
+        }
+
+        const primaryKeys: string[] = [];
+
+        for (const keySchema of primaryKeysKeySchema) {
+            if (keySchema.AttributeName !== undefined) {
+                primaryKeys.push(keySchema.AttributeName);
+            }
+        }
+
+        return primaryKeys;
     }
 }
