@@ -57,8 +57,8 @@ export class AppContainerConfiguration implements ContainerConfiguration {
             orderRepository: aliasTo('inMemoryOrderRepository'),
             productRepository: aliasTo('inMemoryProductRepository'),
             storeRepository: aliasTo('inMemoryStoreRepository'),
-            // userRepository: aliasTo('inMemoryUserRepository'),
-            userRepository: aliasTo('dynamoUserRepository'),
+            userRepository: aliasTo('inMemoryUserRepository'),
+            // userRepository: aliasTo('dynamoUserRepository'),
         })
     }
 
