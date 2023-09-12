@@ -6,6 +6,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import routes from './routes/routes'
 import { useUserStore } from './store/UserStore';
+import { TokenLocalStorage } from './storage/TokenLocalStorage';
 
 const app = createApp(App);
 const router = createRouter({
@@ -23,6 +24,7 @@ app.config.errorHandler = (error: unknown) => {
             const userStore = useUserStore()
 
             userStore.clear()
+            TokenLocalStorage.remove();
 
             router.push({ name: 'home' });
         }

@@ -8,10 +8,32 @@ services:
       - HTTP_PORT=3000
       - NODE_ENV=development
       - VUE_APP_BACKEND_URL=http://localhost:3000
+      - AWS_ACCESS_KEY_ID=ACCESSKEYID
+      - AWS_DYNAMODB_ENDPOINT=http://localstack:4566
+      - AWS_SECRET_ACCESS_KEY=SECRETACCESSKEY
+      - AWS_SESSION_TOKEN=SESSIONTOKEN
+      - AWS_REGION=us-east-2
     ports:
       - 3000:3000
       - 8080:8080
     working_dir: /src
+    links:
+      - localstack
     volumes:
       - ./:/src
     command: npm run dev
+
+  localstack:
+    image: localstack/localstack:2.0
+    environment:
+      - AWS_DEFAULT_REGION=us-east-2
+      - SERVICES=dynamodb
+      - DYNAMODB_SHARE_DB=1
+    ports:
+      - '4566:4566'
+    volumes:
+      - localstack:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  localstack:

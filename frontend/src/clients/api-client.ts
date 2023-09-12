@@ -15,7 +15,9 @@ type Response<T> = {
 enum Method {
   get = 'GET',
   post = 'POST',
-  patch = 'PATCH'
+  patch = 'PATCH',
+  put = 'PUT',
+  delete = 'DELETE'
 }
 
 export class ApiClientError extends Error {
@@ -86,6 +88,38 @@ export class ApiClient {
     };
   }
 
+  async put<T extends {}>(
+    url: string,
+    data: {} = {}
+  ): Promise<ApiClientResponse<T>> {
+    const response = await this.doRequest<T>({
+      method: Method.put,
+      url,
+      data,
+    });
+
+    return {
+      statusCode: response.status,
+      body: response.data,
+    };
+  }
+
+  async delete<T extends {}>(
+    url: string,
+    data: {} = {}
+  ): Promise<ApiClientResponse<T>> {
+    const response = await this.doRequest<T>({
+      method: Method.delete,
+      url,
+      data,
+    });
+
+    return {
+      statusCode: response.status,
+      body: response.data,
+    };
+  }
+
   private async doRequest<T>({
     method,
     url,
@@ -116,6 +150,6 @@ export class ApiClient {
       return undefined;
     }
 
-    return `Bearer ${token.token}`;
+    return `Bearer ${token.value}`;
   }
 }

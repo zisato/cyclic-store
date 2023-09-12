@@ -1,17 +1,23 @@
 import AddSellerRoleController from '../../src/infrastructure/user/controller/add-seller-role-controller';
+import CompleteOrderController from '../../src/infrastructure/order/controller/complete-order-controller';
 import { Container } from '../../src/shared/kernel/container/container';
 import CreateCategoryController from '../../src/infrastructure/category/controller/create-category-controller';
 import CreateOrderController from '../../src/infrastructure/order/controller/create-order-controller';
 import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
 import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
 import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/customer-authenticated-handler';
+import DeleteItemController from '../../src/infrastructure/dynamodb/controller/delete-item-controller';
+import DeleteTableController from '../../src/infrastructure/dynamodb/controller/delete-table-controller';
 import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
+import DetailTableController from '../../src/infrastructure/dynamodb/controller/detail-table-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
+import ListItemsController from '../../src/infrastructure/dynamodb/controller/list-items-controller';
 import ListOrdersBySellerController from '../../src/infrastructure/order/controller/list-orders-by-seller-controller';
 import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
 import ListProductsController from '../../src/infrastructure/product/controller/list-products-controller';
 import ListStoresController from '../../src/infrastructure/store/controller/list-stores-controller';
+import ListTablesController from '../../src/infrastructure/dynamodb/controller/list-tables-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
 import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastify/router-configuration';
 import { RouteOptions } from 'fastify';
@@ -19,8 +25,9 @@ import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-han
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
+import UpdateItemController from '../../src/infrastructure/dynamodb/controller/update-item-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
-import CompleteOrderController from '../../src/infrastructure/order/controller/complete-order-controller';
+import UserDetailController from '../../src/infrastructure/user/controller/user-detail-controller';
 
 export class AppRouteConfiguration implements RouteConfiguration {
   getRoutesOption(container: Container): RouteOptions[] {
@@ -31,6 +38,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     const storeRoutesOptions = this.storeRoutesOptions(container);
     const userRoutesOptions = this.userRoutesOptions(container);
     const authRoutesOptions = this.authRoutesOptions(container);
+    const dynamoRouteOptions = this.dynamoRoutesOptions(container);
 
     return [
       ...commonRoutesOptions,
@@ -39,7 +47,8 @@ export class AppRouteConfiguration implements RouteConfiguration {
       ...productRoutesOptions,
       ...storeRoutesOptions,
       ...userRoutesOptions,
-      ...authRoutesOptions
+      ...authRoutesOptions,
+      ...dynamoRouteOptions
     ];
   }
 
@@ -246,7 +255,17 @@ export class AppRouteConfiguration implements RouteConfiguration {
   private userRoutesOptions(container: Container): RouteOptions[] {
     const customerAuthenticatedHandler = container.getTyped(CustomerAuthenticatedHandler);
 
+    const userDetailController = container.getTyped(UserDetailController);
     const addSellerRoleController = container.getTyped(AddSellerRoleController);
+
+    const userDetailRoleRoute: RouteOptions = {
+      method: 'GET',
+      url: '/users/me',
+      preHandler: [
+        customerAuthenticatedHandler.handle.bind(customerAuthenticatedHandler)
+      ],
+      handler: userDetailController.handle.bind(userDetailController)
+    }
 
     const addSellerRoleRoute: RouteOptions = {
       method: 'POST',
@@ -258,6 +277,7 @@ export class AppRouteConfiguration implements RouteConfiguration {
     }
 
     return [
+      userDetailRoleRoute,
       addSellerRoleRoute
     ];
   }
@@ -274,5 +294,59 @@ export class AppRouteConfiguration implements RouteConfiguration {
     return [
       loginCallbackRoute
     ];
+  }
+
+  private dynamoRoutesOptions(container: Container): RouteOptions[] {
+    const listTablesController = container.getTyped(ListTablesController);
+    const detailTableController = container.getTyped(DetailTableController);
+    const listItemsController = container.getTyped(ListItemsController);
+    const updateItemController = container.getTyped(UpdateItemController);
+    const deleteItemController = container.getTyped(DeleteItemController);
+    const deleteTableController = container.getTyped(DeleteTableController);
+
+    const listTablesRoute: RouteOptions = {
+      method: 'GET',
+      url: '/dynamo/tables',
+      handler: listTablesController.handle.bind(listTablesController)
+    };
+
+    const detailTableRoute: RouteOptions = {
+      method: 'GET',
+      url: '/dynamo/tables/:tableName',
+      handler: detailTableController.handle.bind(detailTableController)
+    };
+
+    const listItemsRoute: RouteOptions = {
+      method: 'GET',
+      url: '/dynamo/tables/:tableName/items',
+      handler: listItemsController.handle.bind(listItemsController)
+    };
+
+    const updateItemRoute: RouteOptions = {
+      method: 'PUT',
+      url: '/dynamo/tables/:tableName/items',
+      handler: updateItemController.handle.bind(updateItemController)
+    };
+
+    const deleteItemRoute: RouteOptions = {
+      method: 'DELETE',
+      url: '/dynamo/tables/:tableName/items',
+      handler: deleteItemController.handle.bind(deleteItemController)
+    };
+
+    const deleteTableRoute: RouteOptions = {
+      method: 'DELETE',
+      url: '/dynamo/tables/:tableName',
+      handler: deleteTableController.handle.bind(deleteTableController)
+    };
+
+    return [
+      listTablesRoute,
+      detailTableRoute,
+      listItemsRoute,
+      updateItemRoute,
+      deleteItemRoute,
+      deleteTableRoute
+    ]
   }
 }

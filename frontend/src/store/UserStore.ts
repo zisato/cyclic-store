@@ -1,5 +1,4 @@
 import { ApiClientUserRepository } from '../repositories/ApiClientUserRepository';
-import { TokenLocalStorage } from '../storage/TokenLocalStorage';
 import { User } from '../models/User';
 import { UserLocalStorage } from '../storage/UserLocalStorage';
 import { defineStore } from 'pinia';
@@ -28,9 +27,6 @@ export const useUserStore = defineStore({
     actions: {
         clear(): void {
             this.user = null;
-
-            TokenLocalStorage.remove();
-
             UserLocalStorage.remove();
         },
         addStoreId(storeId: string): void {
@@ -61,8 +57,6 @@ export const useUserStore = defineStore({
             const userRepository = new ApiClientUserRepository()
 
             this.user = await userRepository.getByToken(token)
-
-            TokenLocalStorage.set({ token, id: this.user.id, roles: this.user.roles })
 
             UserLocalStorage.set(this.user);
         },
