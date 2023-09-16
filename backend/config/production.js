@@ -26,7 +26,7 @@ module.exports = {
   },
   aws: {
     dynamodb: {
-      endpoint: undefined,
+      endpoint: null,
     },
   },
 };

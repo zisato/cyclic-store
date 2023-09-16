@@ -6,10 +6,10 @@ import {
     asClass,
     asValue,
 } from 'awilix';
+import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
 
 import { ContainerConfiguration } from '../src/shared/kernel/configuration/container-configuration';
 import { DynamoClient } from '../src/shared/dynamo/dynamo-client';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { DynamoMigration } from '../src/shared/dynamo/dynamo-migration';
 import { InvalidArgumentError } from '../src/domain/error/invalid-argument-error';
@@ -78,9 +78,13 @@ export class AppContainerConfiguration implements ContainerConfiguration {
     }
 
     private registerInfrastructureServices(container: AwilixContainer, parameters: Parameters): void {
-        const dynamoDBClient = new DynamoDBClient({
-            endpoint: parameters.get<string>('aws.dynamodb.endpoint'),
-        });
+        const dynamoDbOptions: DynamoDBClientConfig = {};
+        const dynamoDBEndpoint = parameters.get<string | null>('aws.dynamodb.endpoint');
+        if (dynamoDBEndpoint !== null) {
+            dynamoDbOptions['endpoint'] = dynamoDBEndpoint;
+        }
+
+        const dynamoDBClient = new DynamoDBClient(dynamoDbOptions);
 
         container.register({
             dynamoDBClient: asValue(dynamoDBClient),
