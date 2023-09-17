@@ -5,7 +5,7 @@ import { TableSchema } from '../../../shared/dynamo/dynamo-migration';
 import { User } from '../../../domain/user/user';
 import { UserRepository } from '../../../domain/user/repository/user-repository';
 
-export default class DynamoUserRepository implements UserRepository {
+export class DynamoUserRepository implements UserRepository {
     constructor(private readonly dynamoClient: DynamoClient) {}
 
     static tableName(): string {

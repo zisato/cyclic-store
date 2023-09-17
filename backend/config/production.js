@@ -8,6 +8,18 @@ module.exports = {
           patterns: [
             path.join(__dirname, '..', 'src', 'infrastructure', '**', '*.js'),
             path.join(__dirname, '..', 'src', 'application', '**', '*.js'),
+            [
+              path.join(
+                __dirname,
+                '..',
+                'src',
+                'infrastructure',
+                '**',
+                'repository',
+                'in-memory-*-repository.ts'
+              ),
+              'SINGLETON',
+            ],
           ],
           lifetime: 'SCOPED',
           injectionMode: 'CLASSIC',
