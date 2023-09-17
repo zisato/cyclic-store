@@ -6,10 +6,11 @@ import { Parameters } from './parameters';
 export class NodeConfigParameters implements Parameters {
   private config: IConfig;
 
-  constructor() {
-    const currentConfig = config.util.cloneDeep(config);
-    this.config = config.util.extendDeep(currentConfig, {
-      environment: currentConfig.util.getEnv('NODE_ENV'),
+  constructor(rootDir: string) {
+    const currentConfig = config.util.loadFileConfigs(rootDir);
+    const configObject = config.util.cloneDeep(config);
+    this.config = config.util.extendDeep(configObject, currentConfig, {
+      environment: process.env['NODE_ENV'],
     });
   }
 

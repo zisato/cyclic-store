@@ -5,7 +5,7 @@
     "main": "src/main.ts",
     "scripts": {
         "dev": "vue-cli-service serve",
-        "build": "vue-cli-service build",
+        "build": "rm -rf ../build/frontend && vue-cli-service build --dest=../build/frontend",
         "test": "vitest --dom --run"
     },
     "keywords": [],

@@ -9,6 +9,7 @@ import DynamoUserRepository from './infrastructure/user/repository/dynamo-user-r
 import { FastifyFrameworkAdapter } from './shared/kernel/configuration/fastify/fastify-framework-adapter';
 import { Kernel } from './shared/kernel/kernel';
 import { Parameters } from './shared/kernel/parameters/parameters';
+import path from 'path';
 
 export class App extends Kernel {
   constructor() {
@@ -29,5 +30,9 @@ export class App extends Kernel {
       frameworkAdapter,
       beforeServerStart
     });
+  }
+
+  rootDir(): string {
+      return path.join(__dirname, '..', 'config');
   }
 }

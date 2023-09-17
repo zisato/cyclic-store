@@ -8,6 +8,7 @@ import { NodeConfigParameters } from './parameters/node-config-parameters';
 import { Parameters } from './parameters/parameters';
 import { Server } from 'http';
 import { createContainer } from 'awilix';
+import path from 'path';
 
 type BeforeServerStart = (container: Container, parameters: Parameters) => Promise<void>
 
@@ -40,9 +41,13 @@ export class Kernel {
     this.beforeServerStart = beforeServerStart ?? nullBeforeServerStart;
   }
 
+  rootDir(): string {
+    return path.join(__dirname, '..', 'config');
+  }
+
   boot(): void {
     if (!this.isKernelBooted) {
-      const parameters = new NodeConfigParameters();
+      const parameters = new NodeConfigParameters(this.rootDir());
       const container = this.loadContainer(parameters);
 
       this.parameters = parameters;
