@@ -24,7 +24,7 @@ class ListItemsDto {
   }
 }
 
-export default class ListItemsController {
+export class ListItemsController {
   constructor(private readonly dynamoClient: DynamoClient) { }
 
   handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {

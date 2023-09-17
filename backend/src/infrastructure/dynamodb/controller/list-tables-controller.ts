@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { DynamoClient } from '../../../shared/dynamo/dynamo-client';
 
-export default class ListTablesController {
+export class ListTablesController {
     constructor(private readonly dynamoClient: DynamoClient) {}
 
     handle = async (_request: FastifyRequest, reply: FastifyReply): Promise<void> => {

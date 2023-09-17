@@ -6,18 +6,18 @@ import CreateOrderController from '../../src/infrastructure/order/controller/cre
 import CreateProductController from '../../src/infrastructure/product/controller/create-product-controller';
 import CreateStoreController from '../../src/infrastructure/store/controller/create-store-controller';
 import CustomerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-handler/customer-authenticated-handler';
-import DeleteItemController from '../../src/infrastructure/dynamodb/controller/delete-item-controller';
-import DeleteTableController from '../../src/infrastructure/dynamodb/controller/delete-table-controller';
+import { DeleteItemController } from '../../src/infrastructure/dynamodb/controller/delete-item-controller';
+import { DeleteTableController } from '../../src/infrastructure/dynamodb/controller/delete-table-controller';
 import DetailProductController from '../../src/infrastructure/product/controller/detail-product-controller';
-import DetailTableController from '../../src/infrastructure/dynamodb/controller/detail-table-controller';
+import { DetailTableController } from '../../src/infrastructure/dynamodb/controller/detail-table-controller';
 import IndexController from '../../src/infrastructure/controller/index-controller';
 import ListCategoriesController from '../../src/infrastructure/category/controller/list-categories-controller';
-import ListItemsController from '../../src/infrastructure/dynamodb/controller/list-items-controller';
+import { ListItemsController } from '../../src/infrastructure/dynamodb/controller/list-items-controller';
 import ListOrdersBySellerController from '../../src/infrastructure/order/controller/list-orders-by-seller-controller';
 import ListProductsByStoreController from '../../src/infrastructure/product/controller/list-products-by-store-controller';
 import ListProductsController from '../../src/infrastructure/product/controller/list-products-controller';
 import ListStoresController from '../../src/infrastructure/store/controller/list-stores-controller';
-import ListTablesController from '../../src/infrastructure/dynamodb/controller/list-tables-controller';
+import { ListTablesController } from '../../src/infrastructure/dynamodb/controller/list-tables-controller';
 import LoginCallbackController from '../../src/infrastructure/user/controller/login-callback-controller';
 import { RouteConfiguration } from '../../src/shared/kernel/configuration/fastify/router-configuration';
 import { RouteOptions } from 'fastify';
@@ -25,7 +25,7 @@ import SellerAuthenticatedHandler from '../../src/infrastructure/fastify/pre-han
 import StatusController from '../../src/infrastructure/controller/status-controller';
 import StoreDetailController from '../../src/infrastructure/store/controller/store-detail-controller';
 import UpdateCategoryController from '../../src/infrastructure/category/controller/update-category-controller';
-import UpdateItemController from '../../src/infrastructure/dynamodb/controller/update-item-controller';
+import { UpdateItemController } from '../../src/infrastructure/dynamodb/controller/update-item-controller';
 import UpdateProductController from '../../src/infrastructure/product/controller/update-product-controller';
 import UserDetailController from '../../src/infrastructure/user/controller/user-detail-controller';
 

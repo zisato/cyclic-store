@@ -24,7 +24,7 @@ class DetailTableDto {
     }
 }
 
-export default class DetailTableController {
+export class DetailTableController {
     constructor(private readonly dynamoClient: DynamoClient) { }
 
     handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
