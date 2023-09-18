@@ -6,10 +6,11 @@ import {
     asClass,
     asValue,
 } from 'awilix';
+import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
 
 import { ContainerConfiguration } from '../src/shared/kernel/configuration/container-configuration';
-// import { DynamoClient } from '../src/shared/dynamo/dynamo-client';
-// import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoClient } from '../src/shared/dynamo/dynamo-client';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 // import { DynamoMigration } from '../src/shared/dynamo/dynamo-migration';
 import { InvalidArgumentError } from '../src/domain/error/invalid-argument-error';
 import { ModelNotFoundError } from '../src/domain/error/model-not-found-error';
@@ -17,8 +18,6 @@ import { Parameters } from '../src/shared/kernel/parameters/parameters';
 import { ProviderIdFromTokenResolver } from '../src/domain/user/service/provider-id-from-token-resolver';
 import { UserNotAuthenticatedError } from '../src/infrastructure/error/user-not-authenticated-error';
 import { UserNotAuthorizedError } from '../src/infrastructure/error/user-not-authorized-error';
-// import { DynamoDBClient, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
-
 
 export class AppContainerConfiguration implements ContainerConfiguration {
     configureContainer(container: AwilixContainer, parameters: Parameters): void {
@@ -45,7 +44,7 @@ export class AppContainerConfiguration implements ContainerConfiguration {
 
         this.registerArguments(container, parameters);
 
-        // this.registerInfrastructureServices(container, parameters);
+        this.registerInfrastructureServices(container, parameters);
 
         this.registerDomainServices(container);
 
@@ -78,7 +77,6 @@ export class AppContainerConfiguration implements ContainerConfiguration {
         });
     }
 
-    /*
     private registerInfrastructureServices(container: AwilixContainer, parameters: Parameters): void {
         const dynamoDbOptions: DynamoDBClientConfig = {};
         const dynamoDBEndpoint = parameters.get<string | null>('aws.dynamodb.endpoint');
@@ -93,11 +91,11 @@ export class AppContainerConfiguration implements ContainerConfiguration {
             dynamoDBDocumentClient: asValue(DynamoDBDocumentClient.from(
                 dynamoDBClient
             )),
-            dynamoMigration: asClass(DynamoMigration),
+            // dynamoMigration: asClass(DynamoMigration),
             dynamoClient: asClass(DynamoClient),
         });
     }
-    */
+
     private registerDomainServices(container: AwilixContainer): void {
         container.register('providerIdFromTokenResolver', asClass(ProviderIdFromTokenResolver));
     }

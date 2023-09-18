@@ -39,7 +39,7 @@ class UpdateItemDto {
   }
 }
 
-export class UpdateItemController {
+export default class UpdateItemController {
   constructor(private readonly dynamoClient: DynamoClient) { }
 
   handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {

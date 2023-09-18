@@ -34,7 +34,7 @@ class DeleteItemDto {
   }
 }
 
-export class DeleteItemController {
+export default class DeleteItemController {
   constructor(private readonly dynamoClient: DynamoClient) {}
 
   handle = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {

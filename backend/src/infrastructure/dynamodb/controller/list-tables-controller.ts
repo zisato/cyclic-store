@@ -1,12 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import { DynamoClient } from '../../../shared/dynamo/dynamo-client';
-
-export class ListTablesController {
-    constructor(private readonly dynamoClient: DynamoClient) {}
-
+export default class ListTablesController {
     handle = async (_request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-        const results = await this.dynamoClient.getTablesName();
+        const results: string[] = []
+        if (process.env.CYCLIC_DB !== undefined) {
+            results.push(process.env.CYCLIC_DB);
+        }
 
         reply.status(200).send({
             data: results
